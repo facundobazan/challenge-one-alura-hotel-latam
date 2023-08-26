@@ -1,20 +1,10 @@
 package ar.com.facundobazan.hotel_alura.views;
 
-import java.awt.BorderLayout;
-import java.awt.FlowLayout;
-
-import javax.swing.JButton;
-import javax.swing.JDialog;
-import javax.swing.JPanel;
+import javax.swing.*;
 import javax.swing.border.EmptyBorder;
-import javax.swing.JLabel;
-import javax.swing.ImageIcon;
-import java.awt.Color;
-import java.awt.Font;
-import java.awt.event.ActionListener;
+import java.awt.*;
 import java.awt.event.ActionEvent;
-import java.awt.SystemColor;
-import java.awt.Toolkit;
+import java.awt.event.ActionListener;
 
 @SuppressWarnings("serial")
 public class Exito extends JDialog {

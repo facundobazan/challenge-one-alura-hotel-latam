@@ -24,7 +24,7 @@ public class ReservaDAO implements Crud<Reserva> {
 
     public List<Reserva> findByDate(LocalDate fechaReserva) {
 
-        String queryBase = "SELECT R Reserva AS R WHERE fecha_reserva = :fechaReserva";
+        String queryBase = "SELECT R FROM Reserva R WHERE fecha_reserva = :fechaReserva";
         TypedQuery<Reserva> query = this.entityManager.createQuery(queryBase, Reserva.class);
         query.setParameter("fechaReserva", fechaReserva);
 
@@ -34,7 +34,7 @@ public class ReservaDAO implements Crud<Reserva> {
     @Override
     public List<Reserva> getAll() {
 
-        String query = "SELECT R Reserva AS R";
+        String query = "SELECT R FROM Reserva R";
         return this.entityManager.createQuery(query, Reserva.class).getResultList();
     }
 

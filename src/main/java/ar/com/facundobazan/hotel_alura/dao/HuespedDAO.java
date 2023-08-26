@@ -7,7 +7,6 @@ import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Predicate;
 import jakarta.persistence.criteria.Root;
 
-import java.time.LocalDate;
 import java.util.List;
 
 public class HuespedDAO implements Crud<Huesped> {
@@ -42,7 +41,7 @@ public class HuespedDAO implements Crud<Huesped> {
     @Override
     public List<Huesped> getAll() {
 
-        String query = "SELECT H Huesped AS P";
+        String query = "SELECT H FROM Huesped H";
         return this.entityManager.createQuery(query, Huesped.class).getResultList();
     }
 

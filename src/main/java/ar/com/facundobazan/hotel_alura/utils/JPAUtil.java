@@ -6,7 +6,7 @@ import jakarta.persistence.Persistence;
 
 public class JPAUtil {
 
-    private static final EntityManagerFactory FACTORY = Persistence.createEntityManagerFactory("mysql");
+    private static final EntityManagerFactory FACTORY = Persistence.createEntityManagerFactory("postgres");
 
     public static EntityManager getEntityManager(){
 
