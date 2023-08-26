@@ -43,7 +43,7 @@ public class AuthService {
 
                 em.getTransaction().begin();
                 UsuarioDAO usuarioDAO = new UsuarioDAO(em);
-                Usuario usuarioAux = usuarioDAO.getOne(usuario.id());
+                Usuario usuarioAux = usuarioDAO.getById(usuario.id());
 
                 if (!Argon2.verificar(usuarioAux.getClave(), usuario.claveActual())) return false;
 
@@ -67,7 +67,7 @@ public class AuthService {
         try (EntityManager em = JPAUtil.getEntityManager()) {
 
             UsuarioDAO usuarioDAO = new UsuarioDAO(em);
-            Usuario usuarioAux = usuarioDAO.getOne(login.id());
+            Usuario usuarioAux = usuarioDAO.getByEmail(login.email());
 
             if (!Argon2.verificar(usuarioAux.getClave(), login.clave())) return null;
             return new RegistroLogin(usuarioAux.getId(), usuarioAux.getEmail(), null);

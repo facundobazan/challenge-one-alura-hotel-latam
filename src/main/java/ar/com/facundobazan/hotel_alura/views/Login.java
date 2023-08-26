@@ -1,5 +1,8 @@
 package ar.com.facundobazan.hotel_alura.views;
 
+import ar.com.facundobazan.hotel_alura.entities.records.RegistroLogin;
+import ar.com.facundobazan.hotel_alura.services.auth.AuthService;
+
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
@@ -237,12 +240,23 @@ public class Login extends JFrame {
         String contrase = new String(txtContrasena.getPassword());
 
         if (txtUsuario.getText().equals(Usuario) && contrase.equals(Contraseña)) {
-            MenuUsuario menu = new MenuUsuario();
-            menu.setVisible(true);
-            dispose();
+            continuar();
+
+            return;
         } else {
+
+            AuthService authService = new AuthService();
+            RegistroLogin login = authService.signIn(new RegistroLogin(null, txtUsuario.getText(), contrase));
+
+            if (login != null) {
+                continuar();
+                return;
+            }
+
             JOptionPane.showMessageDialog(this, "Usuario o Contraseña no válidos");
         }
+
+
     }
 
     private void headerMousePressed(java.awt.event.MouseEvent evt) {
@@ -254,5 +268,11 @@ public class Login extends JFrame {
         int x = evt.getXOnScreen();
         int y = evt.getYOnScreen();
         this.setLocation(x - xMouse, y - yMouse);
+    }
+
+    private void continuar() {
+        MenuUsuario menu = new MenuUsuario();
+        menu.setVisible(true);
+        dispose();
     }
 }

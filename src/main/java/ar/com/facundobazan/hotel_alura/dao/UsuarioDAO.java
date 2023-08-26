@@ -1,12 +1,10 @@
 package ar.com.facundobazan.hotel_alura.dao;
 
 import ar.com.facundobazan.hotel_alura.entities.Usuario;
-import ar.com.facundobazan.hotel_alura.entities.records.RegistroUsuario;
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.TypedQuery;
 
-import java.util.List;
-
-public class UsuarioDAO implements Crud<Usuario> {
+public class UsuarioDAO {
 
     private final EntityManager entityManager;
 
@@ -14,31 +12,36 @@ public class UsuarioDAO implements Crud<Usuario> {
         this.entityManager = entityManager;
     }
 
+    public Usuario getById(Long id) {
 
-    @Override
-    public Usuario getOne(Long id) {
-        return null;
+        return this.entityManager.find(Usuario.class, id);
     }
 
-    @Override
-    public List<Usuario> getAll() {
-        return null;
+    public Usuario getByEmail(String email){
+
+        String queryBase = "SELECT U FROM Usuario U WHERE email = :email";
+        TypedQuery<Usuario> query = this.entityManager.createQuery(queryBase, Usuario.class);
+        query.setParameter("email", email);
+
+        return query.getSingleResult();
     }
 
-    @Override
+    public Usuario signIn(String email, String password) {
+
+        String queryBase = "SELECT U FROM Usuario U WHERE email = :email and clave = :password";
+        TypedQuery<Usuario> query = this.entityManager.createQuery(queryBase, Usuario.class);
+        query.setParameter("email", email);
+        query.setParameter("password", password);
+
+        return query.getSingleResult();
+    }
+
     public void create(Usuario usuario) {
 
         this.entityManager.persist(usuario);
     }
-
-    @Override
     public void update(Usuario usuario) {
 
         this.entityManager.merge(usuario);
-    }
-
-    @Override
-    public void delete(Long id) {
-
     }
 }
