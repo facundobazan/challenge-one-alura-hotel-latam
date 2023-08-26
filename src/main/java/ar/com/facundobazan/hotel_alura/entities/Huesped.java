@@ -1,5 +1,6 @@
 package ar.com.facundobazan.hotel_alura.entities;
 
+import ar.com.facundobazan.hotel_alura.entities.records.RegistroHuesped;
 import jakarta.persistence.*;
 
 import java.time.LocalDate;
@@ -100,8 +101,17 @@ public class Huesped {
         this.reservas = reservas;
     }
 
-    public void addReserva(Reserva reserva){
+    public void addReserva(Reserva reserva) {
 
         this.reservas.add(reserva);
+    }
+
+    public void asignarHuesped(RegistroHuesped huesped) {
+
+        this.apellido = huesped.apellido();
+        this.nombre = huesped.nombre();
+        this.fechaNacimiento = huesped.fechaNacimiento();
+        this.nacionalidad = huesped.nacionalidad();
+        this.telefono = huesped.telefono();
     }
 }

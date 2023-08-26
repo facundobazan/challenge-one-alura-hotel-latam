@@ -55,6 +55,11 @@
             <artifactId>hibernate-core-jakarta</artifactId>
             <version>5.6.15.Final</version>
         </dependency>
+        <dependency>
+            <groupId>de.mkammerer</groupId>
+            <artifactId>argon2-jvm</artifactId>
+            <version>2.11</version>
+        </dependency>
     </dependencies>
 
     <build>

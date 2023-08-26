@@ -16,15 +16,25 @@ public class Reserva {
     @Column(name = "fecha_salida", nullable = false)
     private LocalDate fechaSalida;
     private Double valor;
+    @MapKeyEnumerated(EnumType.STRING)
     private FormaPago formaPago;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @MapKeyEnumerated(EnumType.STRING)
     private Huesped huesped;
 
     public Reserva() {
 
         this.huesped = new Huesped();
+    }
+
+    public Reserva(Long id, LocalDate fechaEntrada, LocalDate fechaSalida, Double valor, FormaPago formaPago, Huesped huesped) {
+
+        this.id = id;
+        this.fechaEntrada = fechaEntrada;
+        this.fechaSalida = fechaSalida;
+        this.valor = valor;
+        this.formaPago = formaPago;
+        this.huesped = huesped;
     }
 
     public Long getId() {
