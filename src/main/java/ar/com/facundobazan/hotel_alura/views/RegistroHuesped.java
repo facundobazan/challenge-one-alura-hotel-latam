@@ -1,4 +1,4 @@
-package views;
+package ar.com.facundobazan.hotel_alura.views;
 
 import java.awt.EventQueue;
 import javax.swing.JFrame;
