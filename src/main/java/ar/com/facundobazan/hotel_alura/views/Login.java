@@ -6,9 +6,7 @@ import ar.com.facundobazan.hotel_alura.services.auth.AuthService;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseMotionAdapter;
+import java.awt.event.*;
 
 public class Login extends JFrame {
 
@@ -158,6 +156,17 @@ public class Login extends JFrame {
                     txtUsuario.setForeground(Color.gray);
                 }
             }
+        });
+        txtContrasena.addFocusListener(new FocusListener() {
+                @Override
+                public void focusGained(FocusEvent focusEvent) {
+                    txtContrasena.setText("");
+                }
+
+                @Override
+                public void focusLost(FocusEvent focusEvent) {
+
+                }
         });
         txtContrasena.setForeground(SystemColor.activeCaptionBorder);
         txtContrasena.setFont(new Font("Roboto", Font.PLAIN, 16));
