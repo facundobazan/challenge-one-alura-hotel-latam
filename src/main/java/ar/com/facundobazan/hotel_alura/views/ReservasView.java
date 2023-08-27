@@ -11,6 +11,13 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.chrono.ChronoLocalDate;
+import java.time.temporal.ChronoUnit;
+import java.time.temporal.Temporal;
+import java.util.Date;
 
 
 @SuppressWarnings("serial")
@@ -24,6 +31,10 @@ public class ReservasView extends JFrame {
 	int xMouse, yMouse;
 	private JLabel labelExit;
 	private JLabel labelAtras;
+
+	private LocalDate fecha_actual;
+	private SimpleDateFormat fechaEntrada;
+	private SimpleDateFormat fechaSalida;
 
 	/**
 	 * Launch the application.
@@ -228,7 +239,6 @@ public class ReservasView extends JFrame {
 		lblSiguiente.setFont(new Font("Roboto", Font.PLAIN, 18));
 		lblSiguiente.setBounds(0, 0, 122, 35);
 		
-		
 		//Campos que guardaremos en la base de datos
 		txtFechaEntrada = new JDateChooser();
 		txtFechaEntrada.getCalendarButton().setBackground(SystemColor.textHighlight);
@@ -270,6 +280,22 @@ public class ReservasView extends JFrame {
 		panel.add(txtValor);
 		txtValor.setColumns(10);
 
+		fecha_actual = LocalDate.now();
+
+		//	Inicia con la fecha actual
+		txtFechaEntrada.setDate(Date.from(fecha_actual.atStartOfDay(ZoneId.systemDefault()).toInstant()));
+		//	Se limita la fecha minima a la actual
+		txtFechaEntrada.setMinSelectableDate(Date.from(fecha_actual.atStartOfDay(ZoneId.systemDefault()).toInstant()));
+		//	Se ajusta la fecha minima de salida
+		txtFechaEntrada.addPropertyChangeListener(propertyChangeEvent -> {
+			txtFechaSalida.setDate(txtFechaEntrada.getDate());
+			txtFechaSalida.setMinSelectableDate(txtFechaEntrada.getDate());
+		});
+		txtFechaSalida.addPropertyChangeListener(propertyChangeEvent -> {
+			LocalDate dias = LocalDate.ofInstant(txtFechaEntrada.getDate().toInstant(), ZoneId.systemDefault());
+			LocalDate dias2 = LocalDate.ofInstant(txtFechaSalida.getDate().toInstant(), ZoneId.systemDefault());
+			txtValor.setText(String.valueOf(dias2.getDayOfYear() - dias.getDayOfYear()));
+		});
 
 		txtFormaPago = new JComboBox();
 		txtFormaPago.setBounds(68, 417, 289, 38);
