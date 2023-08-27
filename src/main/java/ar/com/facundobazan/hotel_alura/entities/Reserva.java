@@ -16,7 +16,7 @@ public class Reserva {
     @Column(name = "fecha_salida", nullable = false)
     private LocalDate fechaSalida;
     private Double valor;
-    @MapKeyEnumerated(EnumType.STRING)
+    @Enumerated(EnumType.STRING)
     private FormaPago formaPago;
 
     @ManyToOne(fetch = FetchType.LAZY)

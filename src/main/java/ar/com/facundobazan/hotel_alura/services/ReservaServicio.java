@@ -1,0 +1,79 @@
+package ar.com.facundobazan.hotel_alura.services;
+
+import ar.com.facundobazan.hotel_alura.dao.ReservaDAO;
+import ar.com.facundobazan.hotel_alura.entities.FormaPago;
+import ar.com.facundobazan.hotel_alura.entities.Reserva;
+import ar.com.facundobazan.hotel_alura.entities.records.RegistroPrecio;
+import ar.com.facundobazan.hotel_alura.entities.records.RegistroReserva;
+import ar.com.facundobazan.hotel_alura.utils.JPAUtil;
+import jakarta.persistence.EntityManager;
+
+import java.time.LocalDate;
+
+public class ReservaServicio {
+
+    public Long registrarReserva(RegistroReserva reserva) {
+
+        try (EntityManager em = JPAUtil.getEntityManager()) {
+
+            ReservaDAO reservaDAO = new ReservaDAO(em);
+            PrecioServicio precioServicio = new PrecioServicio();
+            RegistroPrecio precio = precioServicio.obtenerUltimaActualizacion();
+            em.getTransaction().begin();
+
+            Reserva nuevaReserva = convertir(reserva);
+            double total = calcularPrecioFinal(reserva.fechaEntrada(), reserva.fechaSalida(), reserva.formaPago(), precio);
+            nuevaReserva.setValor(total);
+            nuevaReserva.setId(reservaDAO.reservar(nuevaReserva));
+            em.getTransaction().commit();
+            return nuevaReserva.getId();
+        } catch (Exception e) {
+
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
+    private Reserva convertir(RegistroReserva reserva) {
+        return new Reserva(
+                reserva.id(),
+                reserva.fechaEntrada(),
+                reserva.fechaSalida(),
+                reserva.valor(),
+                reserva.formaPago(),
+                null
+        );
+    }
+
+    private RegistroReserva convertir(Reserva reserva) {
+        return new RegistroReserva(
+                reserva.getId(),
+                reserva.getFechaEntrada(),
+                reserva.getFechaSalida(),
+                reserva.getValor(),
+                reserva.getFormaPago()
+        );
+    }
+
+    public double calcularPrecioFinal(LocalDate fechaEntrada, LocalDate fechaSalida, FormaPago formaPago, RegistroPrecio precio) {
+        int diasFechaEntrada = fechaEntrada.getDayOfYear();
+        int diasFechaSalida = fechaSalida.getDayOfYear();
+        int cantidadDias = diasFechaSalida - diasFechaEntrada + 1;
+        double precioFinal = cantidadDias * precio.precioBase();
+
+        switch (formaPago) {
+            case EFECTIVO -> {
+                return precioFinal * precio.tasaEfectivo();
+            }
+            case DEBITO -> {
+                return precioFinal * precio.tasaDebito();
+            }
+            case CREDITO -> {
+                return precioFinal * precio.tasaTarjeta();
+            }
+        }
+
+        throw new RuntimeException("La operación falló");
+    }
+}

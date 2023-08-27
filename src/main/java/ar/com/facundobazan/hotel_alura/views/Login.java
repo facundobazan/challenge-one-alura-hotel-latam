@@ -282,6 +282,6 @@ public class Login extends JFrame {
     private void continuar() {
         MenuUsuario menu = new MenuUsuario();
         menu.setVisible(true);
-        dispose();
+        this.dispose();
     }
 }

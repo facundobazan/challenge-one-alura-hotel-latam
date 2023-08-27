@@ -4,6 +4,7 @@ import ar.com.facundobazan.hotel_alura.entities.FormaPago;
 import ar.com.facundobazan.hotel_alura.entities.records.RegistroPrecio;
 import ar.com.facundobazan.hotel_alura.entities.records.RegistroReserva;
 import ar.com.facundobazan.hotel_alura.services.PrecioServicio;
+import ar.com.facundobazan.hotel_alura.services.ReservaServicio;
 import com.toedter.calendar.JDateChooser;
 
 import javax.swing.*;
@@ -15,6 +16,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Date;
@@ -27,14 +29,16 @@ public class ReservasView extends JFrame {
     public static JTextField txtValor;
     public static JDateChooser txtFechaEntrada;
     public static JDateChooser txtFechaSalida;
-    public static JComboBox<String> txtFormaPago;
+    public static JComboBox<FormaPago> txtFormaPago;
     int xMouse, yMouse;
     private JLabel labelExit;
     private JLabel labelAtras;
 
-    private LocalDate fechaActual;
+    private Date fechaActual = Date.from(Instant.now());
+    private LocalDate fechaEntradaSeleccionada;
+    private LocalDate fechaSalidaSeleccionada;
     private RegistroPrecio preciosActuales;
-    private Double metodoPago = 1.0;
+    private FormaPago formaPagoSeleccionada = FormaPago.EFECTIVO;
 
     /**
      * Launch the application.
@@ -280,49 +284,54 @@ public class ReservasView extends JFrame {
         txtValor.setEditable(false);
         txtValor.setFont(new Font("Roboto Black", Font.BOLD, 17));
         txtValor.setBorder(javax.swing.BorderFactory.createEmptyBorder());
+        //txtValor.getText().formatted("$ %.2f");
         panel.add(txtValor);
         txtValor.setColumns(10);
-
-        fechaActual = LocalDate.now();
         PrecioServicio precioServicio = new PrecioServicio();
         preciosActuales = precioServicio.obtenerUltimaActualizacion();
 
         //	Inicia con la fecha actual
-        txtFechaEntrada.setDate(Date.from(fechaActual.atStartOfDay(ZoneId.systemDefault()).toInstant()));
+        txtFechaEntrada.setDate(fechaActual);
+        txtFechaSalida.setDate(fechaActual);
         //	Se limita la fecha minima a la actual
-        txtFechaEntrada.setMinSelectableDate(Date.from(fechaActual.atStartOfDay(ZoneId.systemDefault()).toInstant()));
+        txtFechaEntrada.setMinSelectableDate(fechaActual);
         //	Se ajusta la fecha minima de salida
         txtFechaEntrada.addPropertyChangeListener(propertyChangeEvent -> {
-            txtFechaSalida.setDate(txtFechaEntrada.getDate());
             txtFechaSalida.setMinSelectableDate(txtFechaEntrada.getDate());
+            //if (txtFechaSalida.getDate().after(txtFechaSalida.getDate()))
+                txtFechaSalida.setDate(txtFechaEntrada.getDate());
             actualizarPrecio();
         });
-        txtFechaSalida.addPropertyChangeListener(propertyChangeEvent -> {
-            actualizarPrecio();
-        });
+        txtFechaSalida.addPropertyChangeListener(propertyChangeEvent -> actualizarPrecio());
 
         txtFormaPago = new JComboBox();
         txtFormaPago.setBounds(68, 417, 289, 38);
         txtFormaPago.setBackground(SystemColor.text);
         txtFormaPago.setBorder(new LineBorder(new Color(255, 255, 255), 1, true));
         txtFormaPago.setFont(new Font("Roboto", Font.PLAIN, 16));
-        txtFormaPago.setModel(new DefaultComboBoxModel(new String[]{"Tarjeta de Crédito", "Tarjeta de Débito", "Dinero en efectivo"}));
+        txtFormaPago.setModel(new DefaultComboBoxModel(FormaPago.values()));
+        txtFormaPago.addActionListener(evt -> actualizarPrecio());
+        txtFormaPago.setSelectedItem(formaPagoSeleccionada);
         panel.add(txtFormaPago);
 
-        txtFormaPago.addActionListener(e -> actualizarPrecio());
+        //formaPagoSeleccionada = (FormaPago) txtFormaPago.getSelectedItem();
 
         JPanel btnsiguiente = new JPanel();
         btnsiguiente.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
                 if (ReservasView.txtFechaEntrada.getDate() != null && ReservasView.txtFechaSalida.getDate() != null) {
-                    LocalDate entrada = txtFechaEntrada.getDate().toInstant().atZone(ZoneId.systemDefault())
-                            .toLocalDate();
-                    LocalDate salida = txtFechaSalida.getDate().toInstant().atZone(ZoneId.systemDefault())
-                            .toLocalDate();
-                    RegistroReserva reserva = new RegistroReserva(entrada, salida, 0.0, FormaPago.EFECTIVO);
-                    RegistroHuesped registro = new RegistroHuesped(reserva); // TODO: implementar reserva
+                    ReservaServicio reservaServicio = new ReservaServicio();
+                    Long id = reservaServicio.registrarReserva(new RegistroReserva(
+                            null,
+                            fechaEntradaSeleccionada,
+                            fechaEntradaSeleccionada,
+                            0.0,
+                            formaPagoSeleccionada
+                    ));
+                    RegistroHuesped registro = new RegistroHuesped(id);
                     registro.setVisible(true);
+                    dispose();
                 } else {
                     JOptionPane.showMessageDialog(null, "Debes llenar todos los campos.");
                 }
@@ -342,20 +351,29 @@ public class ReservasView extends JFrame {
 
         btnsiguiente.add(jLabel);
 
+        actualizarPrecio();
+    }
+
+    private void actualizarFormaPago() {
+        formaPagoSeleccionada = (FormaPago) txtFormaPago.getSelectedItem();
+    }
+
+    private void actualizarFechaEntradaSeccionada() {
+        fechaEntradaSeleccionada = txtFechaEntrada.getDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+    }
+
+    private void actualizarFechaSalidaSeccionada() {
+        fechaSalidaSeleccionada = txtFechaSalida.getDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
     }
 
     private void actualizarPrecio() {
-        // "Tarjeta de Crédito", "Tarjeta de Débito", "Dinero en efectivo"
-        switch (txtFormaPago.getSelectedItem().toString()) {
-            case "Tarjeta de Crédito" -> metodoPago = preciosActuales.tasaTarjeta();
-            case "Tarjeta de Débito" -> metodoPago = preciosActuales.tasaDebito();
-            case "Dinero en efectivo" -> metodoPago = preciosActuales.tasaEfectivo();
-        }
+        actualizarFechaEntradaSeccionada();
+        actualizarFechaSalidaSeccionada();
+        actualizarFormaPago();
 
-        LocalDate fechaUno = LocalDate.ofInstant(txtFechaEntrada.getDate().toInstant(), ZoneId.systemDefault());
-        LocalDate fechaDos = LocalDate.ofInstant(txtFechaSalida.getDate().toInstant(), ZoneId.systemDefault());
-        int dias = (fechaDos.getDayOfYear() - fechaUno.getDayOfYear()) + 1;
-        double precioFinal = (preciosActuales.precioBase() * dias) * metodoPago;
+        ReservaServicio reservaServicio = new ReservaServicio();
+        double precioFinal = reservaServicio.calcularPrecioFinal(fechaEntradaSeleccionada, fechaSalidaSeleccionada, formaPagoSeleccionada, preciosActuales);
+
         txtValor.setText(String.format("$ %.2f", precioFinal));
     }
 
