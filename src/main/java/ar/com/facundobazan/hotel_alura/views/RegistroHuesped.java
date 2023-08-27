@@ -1,6 +1,5 @@
 package ar.com.facundobazan.hotel_alura.views;
 
-import ar.com.facundobazan.hotel_alura.entities.records.RegistroReserva;
 import com.toedter.calendar.JDateChooser;
 
 import javax.swing.*;

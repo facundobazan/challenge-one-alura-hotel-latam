@@ -2,7 +2,6 @@ package ar.com.facundobazan.hotel_alura.views;
 
 import ar.com.facundobazan.hotel_alura.entities.FormaPago;
 import ar.com.facundobazan.hotel_alura.entities.records.RegistroPrecio;
-import ar.com.facundobazan.hotel_alura.entities.records.RegistroReserva;
 import ar.com.facundobazan.hotel_alura.services.PrecioServicio;
 import ar.com.facundobazan.hotel_alura.services.ReservaServicio;
 import com.toedter.calendar.JDateChooser;
@@ -320,7 +319,7 @@ public class ReservasView extends JFrame {
         btnsiguiente.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                if (ReservasView.txtFechaEntrada.getDate() != null && ReservasView.txtFechaSalida.getDate() != null) {
+                /*if (ReservasView.txtFechaEntrada.getDate() != null && ReservasView.txtFechaSalida.getDate() != null) {
                     ReservaServicio reservaServicio = new ReservaServicio();
                     Long id = reservaServicio.registrarReserva(new RegistroReserva(
                             null,
@@ -334,7 +333,9 @@ public class ReservasView extends JFrame {
                     dispose();
                 } else {
                     JOptionPane.showMessageDialog(null, "Debes llenar todos los campos.");
-                }
+                }*/
+                //  TODO: Emplear formulario fmxl
+
             }
         });
         btnsiguiente.setLayout(null);

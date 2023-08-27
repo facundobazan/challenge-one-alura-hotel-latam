@@ -2,6 +2,7 @@ package ar.com.facundobazan.hotel_alura.dao;
 
 import ar.com.facundobazan.hotel_alura.entities.Huesped;
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.TypedQuery;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Predicate;
@@ -22,6 +23,15 @@ public class HuespedDAO implements Crud<Huesped> {
     public Huesped getOne(Long id) {
 
         return this.entityManager.find(Huesped.class, id);
+    }
+
+    public Huesped getByDocumento(String documento){
+
+        String query = "SELECT H FROM Huesped H WHERE documento = :documento";
+        TypedQuery<Huesped> typedQuery = this.entityManager.createQuery(query, Huesped.class);
+        typedQuery.setParameter("documento", documento);
+
+        return typedQuery.getSingleResult();
     }
 
     public List<Huesped> find(String apellido, String nombre) {

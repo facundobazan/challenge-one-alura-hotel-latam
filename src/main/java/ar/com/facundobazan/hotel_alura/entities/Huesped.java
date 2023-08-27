@@ -18,6 +18,8 @@ public class Huesped {
     private String apellido;
     @Column(nullable = false)
     private String nombre;
+    @Column(name = "documento", unique = true, nullable = false, updatable = false, length = 12)
+    private String documento;
     @Column(name = "fecha_nacimiento")
     private LocalDate fechaNacimiento;
     private String nacionalidad;
@@ -113,5 +115,10 @@ public class Huesped {
         this.fechaNacimiento = huesped.fechaNacimiento();
         this.nacionalidad = huesped.nacionalidad();
         this.telefono = huesped.telefono();
+        this.documento = huesped.documento();
+    }
+
+    public String getDocumento() {
+        return documento;
     }
 }
