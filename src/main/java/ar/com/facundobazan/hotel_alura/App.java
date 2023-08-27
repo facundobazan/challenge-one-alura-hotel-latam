@@ -4,8 +4,6 @@ import ar.com.facundobazan.hotel_alura.entities.records.RegistroPrecio;
 import ar.com.facundobazan.hotel_alura.services.PrecioServicio;
 import ar.com.facundobazan.hotel_alura.views.MenuPrincipal;
 
-import java.math.BigDecimal;
-
 public class App {
 
     public static void main(String[] args) {
@@ -32,18 +30,18 @@ public class App {
             System.out.println("Inicializando precios...");
 
             RegistroPrecio preciosIniciales = new RegistroPrecio(
-                    new BigDecimal(99.99), // Precio base
-                    new BigDecimal(9.99), // Precio hab. simple
-                    new BigDecimal(13.49), // Precio hab. doble
-                    new BigDecimal(14.99), // Precio hab. matrimonial
-                    new BigDecimal(24.99), // Precio hab. suite
-                    new BigDecimal(4.99), // Precio gimnasio
-                    new BigDecimal(4.99), // Precio solarium
-                    new BigDecimal(0.99), // Precio canales premium
-                    new BigDecimal(6.99), // Precio servicio a la hab.
-                    new BigDecimal(4.99), // Precio desayuno
-                    new BigDecimal(4.99), // Precio merienda
-                    new BigDecimal(7.99)  // Precio cena
+                    99.99, // Precio base
+                    9.99, // Precio hab. simple
+                    13.49, // Precio hab. doble
+                    14.99, // Precio hab. matrimonial
+                    24.99, // Precio hab. suite
+                    4.99, // Precio gimnasio
+                    4.99, // Precio solarium
+                    0.99, // Precio canales premium
+                    6.99, // Precio servicio a la hab.
+                    4.99, // Precio desayuno
+                    4.99, // Precio merienda
+                    7.99  // Precio cena
             );
 
             precioServicio.ActualizarPrecios(preciosIniciales);

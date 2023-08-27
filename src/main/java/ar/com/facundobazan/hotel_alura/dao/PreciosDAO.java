@@ -3,7 +3,6 @@ package ar.com.facundobazan.hotel_alura.dao;
 import ar.com.facundobazan.hotel_alura.entities.Precio;
 import jakarta.persistence.EntityManager;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 public class PreciosDAO{

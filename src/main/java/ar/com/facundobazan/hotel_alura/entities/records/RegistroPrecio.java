@@ -1,9 +1,5 @@
 package ar.com.facundobazan.hotel_alura.entities.records;
 
-import ar.com.facundobazan.hotel_alura.entities.Precio;
-
-import java.math.BigDecimal;
-
-public record RegistroPrecio(BigDecimal precioBase, BigDecimal habitacionSimple, BigDecimal habitacionDoble, BigDecimal habitacionMatrimonial, BigDecimal habitacionSuite, BigDecimal gimnasio, BigDecimal solarium, BigDecimal canalesPremium, BigDecimal servicioHabitacion, BigDecimal desayuno, BigDecimal merienda, BigDecimal cena) {
+public record RegistroPrecio(double precioBase, double habitacionSimple, double habitacionDoble, double habitacionMatrimonial, double habitacionSuite, double gimnasio, double solarium, double canalesPremium, double servicioHabitacion, double desayuno, double merienda, double cena) {
 
 }

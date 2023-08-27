@@ -2,7 +2,6 @@ package ar.com.facundobazan.hotel_alura.entities;
 
 import jakarta.persistence.*;
 
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Entity
@@ -15,47 +14,47 @@ public class Precio {
     @Column(name = "fecha_actualizacion", nullable = false, updatable = false)
     private LocalDateTime fechaActualizacion;
     @Column(name = "precio_base", nullable = false, updatable = false)
-    private BigDecimal precioBase;
+    private double precioBase;
     @Column(name = "habitacion_simple", nullable = false, updatable = false)
-    private BigDecimal habitacionSimple;
+    private double habitacionSimple;
     @Column(name = "habitacion_doble", nullable = false, updatable = false)
-    private BigDecimal habitacionDoble;
+    private double habitacionDoble;
     @Column(name = "habitacion_matrimonial", nullable = false, updatable = false)
-    private BigDecimal habitacionMatrimonial;
+    private double habitacionMatrimonial;
     @Column(name = "habitacion_suite", nullable = false, updatable = false)
-    private BigDecimal habitacionSuite;
+    private double habitacionSuite;
     @Column(name = "gimnasio", nullable = false, updatable = false)
-    private BigDecimal gimnasio;
+    private double gimnasio;
     @Column(name = "solarium", nullable = false, updatable = false)
-    private BigDecimal solarium;
+    private double solarium;
     @Column(name = "canales_premium", nullable = false, updatable = false)
-    private BigDecimal canalesPremium;
+    private double canalesPremium;
     @Column(name = "servicio_habitacion", nullable = false, updatable = false)
-    private BigDecimal servicioHabitacion;
+    private double servicioHabitacion;
     @Column(name = "desayuno", nullable = false, updatable = false)
-    private BigDecimal desayuno;
+    private double desayuno;
     @Column(name = "merienda", nullable = false, updatable = false)
-    private BigDecimal merienda;
+    private double merienda;
     @Column(name = "cena", nullable = false, updatable = false)
-    private BigDecimal cena;
+    private double cena;
 
     public Precio() {
 
-        this.precioBase = new BigDecimal(0.0);
-        this.habitacionSimple = new BigDecimal(0.0);
-        this.habitacionDoble = new BigDecimal(0.0);
-        this.habitacionMatrimonial = new BigDecimal(0.0);
-        this.habitacionSuite = new BigDecimal(0.0);
-        this.gimnasio = new BigDecimal(0.0);
-        this.solarium = new BigDecimal(0.0);
-        this.canalesPremium = new BigDecimal(0.0);
-        this.servicioHabitacion = new BigDecimal(0.0);
-        this.desayuno = new BigDecimal(0.0);
-        this.merienda = new BigDecimal(0.0);
-        this.cena = new BigDecimal(0.0);
+        this.precioBase = 0.0;
+        this.habitacionSimple = 0.0;
+        this.habitacionDoble = 0.0;
+        this.habitacionMatrimonial = 0.0;
+        this.habitacionSuite = 0.0;
+        this.gimnasio = 0.0;
+        this.solarium = 0.0;
+        this.canalesPremium = 0.0;
+        this.servicioHabitacion = 0.0;
+        this.desayuno = 0.0;
+        this.merienda = 0.0;
+        this.cena = 0.0;
     }
 
-    public Precio(Long id, LocalDateTime fechaActualizacion, BigDecimal precioBase, BigDecimal habitacionSimple, BigDecimal habitacionDoble, BigDecimal habitacionMatrimonial, BigDecimal habitacionSuite, BigDecimal gimnasio, BigDecimal solarium, BigDecimal canalesPremium, BigDecimal servicioHabitacion, BigDecimal desayuno, BigDecimal merienda, BigDecimal cena) {
+    public Precio(Long id, LocalDateTime fechaActualizacion, double precioBase, double habitacionSimple, double habitacionDoble, double habitacionMatrimonial, double habitacionSuite, double gimnasio, double solarium, double canalesPremium, double servicioHabitacion, double desayuno, double merienda, double cena) {
 
         this.id = id;
         this.fechaActualizacion = fechaActualizacion;
@@ -83,62 +82,62 @@ public class Precio {
         return fechaActualizacion;
     }
 
-    public BigDecimal getPrecioBase() {
+    public double getPrecioBase() {
 
         return precioBase;
     }
 
-    public BigDecimal getHabitacionSimple() {
+    public double getHabitacionSimple() {
 
         return habitacionSimple;
     }
 
-    public BigDecimal getHabitacionDoble() {
+    public double getHabitacionDoble() {
 
         return habitacionDoble;
     }
 
-    public BigDecimal getHabitacionMatrimonial() {
+    public double getHabitacionMatrimonial() {
 
         return habitacionMatrimonial;
     }
 
-    public BigDecimal getHabitacionSuite() {
+    public double getHabitacionSuite() {
 
         return habitacionSuite;
     }
 
-    public BigDecimal getGimnasio() {
+    public double getGimnasio() {
 
         return gimnasio;
     }
 
-    public BigDecimal getSolarium() {
+    public double getSolarium() {
 
         return solarium;
     }
 
-    public BigDecimal getCanalesPremium() {
+    public double getCanalesPremium() {
 
         return canalesPremium;
     }
 
-    public BigDecimal getServicioHabitacion() {
+    public double getServicioHabitacion() {
 
         return servicioHabitacion;
     }
 
-    public BigDecimal getDesayuno() {
+    public double getDesayuno() {
 
         return desayuno;
     }
 
-    public BigDecimal getMerienda() {
+    public double getMerienda() {
 
         return merienda;
     }
 
-    public BigDecimal getCena() {
+    public double getCena() {
 
         return cena;
     }
