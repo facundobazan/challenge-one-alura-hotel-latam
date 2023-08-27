@@ -57,7 +57,10 @@ public class PrecioServicio {
                 precio.servicioHabitacion(),
                 precio.desayuno(),
                 precio.merienda(),
-                precio.cena()
+                precio.cena(),
+                precio.tasaEfectivo(),
+                precio.tasaDebito(),
+                precio.tasaTarjeta()
         );
     }
 
@@ -75,7 +78,10 @@ public class PrecioServicio {
                 precio.getServicioHabitacion(),
                 precio.getDesayuno(),
                 precio.getMerienda(),
-                precio.getCena()
+                precio.getCena(),
+                precio.getTasaEfectivo(),
+                precio.getTasaDebito(),
+                precio.getTasaTarjeta()
         );
     }
 }

@@ -37,6 +37,12 @@ public class Precio {
     private double merienda;
     @Column(name = "cena", nullable = false, updatable = false)
     private double cena;
+    @Column(name = "tasa_efectivo", nullable = false, updatable = false)
+    private double tasaEfectivo;
+    @Column(name = "tasa_debito", nullable = false, updatable = false)
+    private double tasaDebito;
+    @Column(name = "tasa_tarjeta", nullable = false, updatable = false)
+    private double tasaTarjeta;
 
     public Precio() {
 
@@ -52,9 +58,12 @@ public class Precio {
         this.desayuno = 0.0;
         this.merienda = 0.0;
         this.cena = 0.0;
+        this.tasaEfectivo = 1.0;    // Valor por defecto = + 0%
+        this.tasaDebito = 1.05;     // Valor por defecto = + 5%
+        this.tasaTarjeta = 1.15;    // Valor por defecto = + 15%
     }
 
-    public Precio(Long id, LocalDateTime fechaActualizacion, double precioBase, double habitacionSimple, double habitacionDoble, double habitacionMatrimonial, double habitacionSuite, double gimnasio, double solarium, double canalesPremium, double servicioHabitacion, double desayuno, double merienda, double cena) {
+    public Precio(Long id, LocalDateTime fechaActualizacion, double precioBase, double habitacionSimple, double habitacionDoble, double habitacionMatrimonial, double habitacionSuite, double gimnasio, double solarium, double canalesPremium, double servicioHabitacion, double desayuno, double merienda, double cena, double tasaEfectivo, double tasaDebito, double tasaTarjeta) {
 
         this.id = id;
         this.fechaActualizacion = fechaActualizacion;
@@ -70,6 +79,9 @@ public class Precio {
         this.desayuno = desayuno;
         this.merienda = merienda;
         this.cena = cena;
+        this.tasaEfectivo = tasaEfectivo;
+        this.tasaDebito = tasaDebito;
+        this.tasaTarjeta = tasaTarjeta;
     }
 
     public Long getId() {
@@ -140,6 +152,18 @@ public class Precio {
     public double getCena() {
 
         return cena;
+    }
+
+    public double getTasaEfectivo() {
+        return tasaEfectivo;
+    }
+
+    public double getTasaDebito() {
+        return tasaDebito;
+    }
+
+    public double getTasaTarjeta() {
+        return tasaTarjeta;
     }
 
     public void setFechaActualizacion(LocalDateTime fechaActualizacion) {

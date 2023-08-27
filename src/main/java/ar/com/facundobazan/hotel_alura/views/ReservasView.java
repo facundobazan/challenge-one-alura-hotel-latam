@@ -340,9 +340,9 @@ public class ReservasView extends JFrame {
     private void actualizarPrecio() {
         // "Tarjeta de Crédito", "Tarjeta de Débito", "Dinero en efectivo"
         switch (txtFormaPago.getSelectedItem().toString()) {
-            case "Tarjeta de Crédito" -> metodoPago = 1.10;
-            case "Tarjeta de Débito" -> metodoPago = 1.05;
-            case "Dinero en efectivo" -> metodoPago = 1.0;
+            case "Tarjeta de Crédito" -> metodoPago = preciosActuales.tasaTarjeta();
+            case "Tarjeta de Débito" -> metodoPago = preciosActuales.tasaDebito();
+            case "Dinero en efectivo" -> metodoPago = preciosActuales.tasaEfectivo();
         }
 
         LocalDate fechaUno = LocalDate.ofInstant(txtFechaEntrada.getDate().toInstant(), ZoneId.systemDefault());

@@ -41,7 +41,10 @@ public class App {
                     6.99, // Precio servicio a la hab.
                     4.99, // Precio desayuno
                     4.99, // Precio merienda
-                    7.99  // Precio cena
+                    7.99, // Precio cena
+                    1.00, // Tasa efectivo
+                    1.05, // Tasa debito
+                    1.15  // Tasa tarjeta
             );
 
             precioServicio.ActualizarPrecios(preciosIniciales);
