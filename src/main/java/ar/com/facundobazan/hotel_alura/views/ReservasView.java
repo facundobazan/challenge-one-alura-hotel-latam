@@ -1,6 +1,8 @@
 package ar.com.facundobazan.hotel_alura.views;
 
+import ar.com.facundobazan.hotel_alura.entities.FormaPago;
 import ar.com.facundobazan.hotel_alura.entities.records.RegistroPrecio;
+import ar.com.facundobazan.hotel_alura.entities.records.RegistroReserva;
 import ar.com.facundobazan.hotel_alura.services.PrecioServicio;
 import com.toedter.calendar.JDateChooser;
 
@@ -314,7 +316,12 @@ public class ReservasView extends JFrame {
             @Override
             public void mouseClicked(MouseEvent e) {
                 if (ReservasView.txtFechaEntrada.getDate() != null && ReservasView.txtFechaSalida.getDate() != null) {
-                    RegistroHuesped registro = new RegistroHuesped();
+                    LocalDate entrada = txtFechaEntrada.getDate().toInstant().atZone(ZoneId.systemDefault())
+                            .toLocalDate();
+                    LocalDate salida = txtFechaSalida.getDate().toInstant().atZone(ZoneId.systemDefault())
+                            .toLocalDate();
+                    RegistroReserva reserva = new RegistroReserva(entrada, salida, 0.0, FormaPago.EFECTIVO);
+                    RegistroHuesped registro = new RegistroHuesped(reserva); // TODO: implementar reserva
                     registro.setVisible(true);
                 } else {
                     JOptionPane.showMessageDialog(null, "Debes llenar todos los campos.");

@@ -1,5 +1,6 @@
 package ar.com.facundobazan.hotel_alura.views;
 
+import ar.com.facundobazan.hotel_alura.entities.records.RegistroReserva;
 import com.toedter.calendar.JDateChooser;
 
 import javax.swing.*;
@@ -40,11 +41,14 @@ public class RegistroHuesped extends JFrame {
 		});
 	}
 
+	public RegistroHuesped (RegistroReserva reserva) {
+
+	}
 	/**
 	 * Create the frame.
 	 */
 	public RegistroHuesped() {
-		
+
 		setIconImage(Toolkit.getDefaultToolkit().getImage(RegistroHuesped.class.getResource("/imagenes/lOGO-50PX.png")));
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 910, 634);
