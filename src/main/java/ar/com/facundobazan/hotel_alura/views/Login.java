@@ -1,7 +1,7 @@
 package ar.com.facundobazan.hotel_alura.views;
 
 import ar.com.facundobazan.hotel_alura.entities.records.RegistroLogin;
-import ar.com.facundobazan.hotel_alura.services.auth.AuthService;
+import ar.com.facundobazan.hotel_alura.services.AuthServicio;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -254,8 +254,8 @@ public class Login extends JFrame {
             return;
         } else {
 
-            AuthService authService = new AuthService();
-            RegistroLogin login = authService.signIn(new RegistroLogin(null, txtUsuario.getText(), contrase));
+            AuthServicio authServicio = new AuthServicio();
+            RegistroLogin login = authServicio.signIn(new RegistroLogin(null, txtUsuario.getText(), contrase));
 
             if (login != null) {
                 continuar();

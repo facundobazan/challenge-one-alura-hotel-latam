@@ -1,4 +1,4 @@
-package ar.com.facundobazan.hotel_alura.services.auth;
+package ar.com.facundobazan.hotel_alura.services;
 
 import ar.com.facundobazan.hotel_alura.dao.UsuarioDAO;
 import ar.com.facundobazan.hotel_alura.entities.Usuario;
@@ -9,7 +9,7 @@ import ar.com.facundobazan.hotel_alura.utils.Argon2;
 import ar.com.facundobazan.hotel_alura.utils.JPAUtil;
 import jakarta.persistence.EntityManager;
 
-public class AuthService {
+public class AuthServicio {
 
     public Boolean RegistrarUsuario(RegistroUsuario usuario) {
 
