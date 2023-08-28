@@ -8,6 +8,7 @@ import ar.com.facundobazan.hotel_alura.entities.records.RegistroHuesped;
 import ar.com.facundobazan.hotel_alura.utils.JPAUtil;
 import jakarta.persistence.EntityManager;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class HuespedServicio {
@@ -25,6 +26,7 @@ public class HuespedServicio {
             if (huesped == null) return null;
 
             return new RegistroHuesped(
+                    huesped.getId(),
                     huesped.getApellido(),
                     huesped.getNombre(),
                     huesped.getDocumento(),
@@ -79,5 +81,33 @@ public class HuespedServicio {
 
             e.printStackTrace();
         }
+    }
+
+    public ArrayList<RegistroHuesped> obtenerHuespedes() {
+
+        ArrayList<RegistroHuesped> huespedes = new ArrayList<>();
+
+        try (EntityManager em = JPAUtil.getEntityManager()) {
+
+            HuespedDAO huespedDAO = new HuespedDAO(em);
+            List<Huesped> results = huespedDAO.getAll();
+
+            if (results.isEmpty()) return huespedes;
+
+            for (Huesped h:results) huespedes.add(new RegistroHuesped(
+                    h.getId(),
+                    h.getApellido(),
+                    h.getNombre(),
+                    h.getDocumento(),
+                    h.getFechaNacimiento(),
+                    h.getNacionalidad(),
+                    h.getTelefono()));
+
+        } catch (Exception e) {
+
+            e.printStackTrace();
+        }
+
+        return huespedes;
     }
 }

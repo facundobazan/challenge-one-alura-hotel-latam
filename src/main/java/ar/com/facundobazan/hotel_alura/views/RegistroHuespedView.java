@@ -348,6 +348,7 @@ public class RegistroHuespedView extends JFrame {
 
             HuespedServicio huespedServicio = new HuespedServicio();
             huespedServicio.registrarReserva(new RegistroHuesped(
+                    null,
                     txtApellido.getText(),
                     txtNombre.getText(),
                     documentoHuesped,

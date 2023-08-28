@@ -9,6 +9,7 @@ import ar.com.facundobazan.hotel_alura.utils.JPAUtil;
 import jakarta.persistence.EntityManager;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 
 public class ReservaServicio {
 
@@ -75,5 +76,24 @@ public class ReservaServicio {
         }
 
         throw new RuntimeException("La operación falló");
+    }
+
+    public ArrayList<RegistroReserva> obtenerReservas() {
+
+        ArrayList<RegistroReserva> registroReservas = new ArrayList<>();
+
+        try (EntityManager em = JPAUtil.getEntityManager()) {
+
+            ReservaDAO reservaDAO = new ReservaDAO(em);
+            ArrayList<Reserva> reservas = (ArrayList<Reserva>) reservaDAO.getAll();
+            for (Reserva r: reservas) registroReservas.add(convertir(r));
+
+            return registroReservas;
+        } catch (Exception e) {
+
+            e.printStackTrace();
+        }
+
+        return null;
     }
 }
