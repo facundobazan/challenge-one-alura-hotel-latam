@@ -7,7 +7,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 @SuppressWarnings("serial")
-public class Exito extends JDialog {
+public class ExitoView extends JDialog {
 
 	private final JPanel contentPanel = new JPanel();
 
@@ -16,7 +16,7 @@ public class Exito extends JDialog {
 	 */
 	public static void main(String[] args) {
 		try {
-			Exito dialog = new Exito();
+			ExitoView dialog = new ExitoView();
 			dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 			dialog.setVisible(true);
 		} catch (Exception e) {
@@ -27,8 +27,8 @@ public class Exito extends JDialog {
 	/**
 	 * Create the dialog.
 	 */
-	public Exito() {
-		setIconImage(Toolkit.getDefaultToolkit().getImage(Exito.class.getResource("/imagenes/aH-40px.png")));
+	public ExitoView() {
+		setIconImage(Toolkit.getDefaultToolkit().getImage(ExitoView.class.getResource("/imagenes/aH-40px.png")));
 		setBounds(100, 100, 394, 226);
 		getContentPane().setLayout(new BorderLayout());
 		contentPanel.setBackground(SystemColor.control);
@@ -38,7 +38,7 @@ public class Exito extends JDialog {
 		contentPanel.setLayout(null);
 		{
 			JLabel lblNewLabel = new JLabel("");
-			lblNewLabel.setIcon(new ImageIcon(Exito.class.getResource("/imagenes/Ha-100px.png")));
+			lblNewLabel.setIcon(new ImageIcon(ExitoView.class.getResource("/imagenes/Ha-100px.png")));
 			lblNewLabel.setBounds(123, 11, 100, 100);
 			contentPanel.add(lblNewLabel);
 		}
@@ -58,7 +58,7 @@ public class Exito extends JDialog {
 				okButton.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
 						dispose();//sirve para cerrar la ventana actual
-						MenuUsuario usuario = new MenuUsuario(); 
+						MenuUsuarioView usuario = new MenuUsuarioView();
 						usuario.setVisible(true);
 					}
 				});

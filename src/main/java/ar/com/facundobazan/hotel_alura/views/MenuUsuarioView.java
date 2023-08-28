@@ -10,7 +10,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 @SuppressWarnings("serial")
-public class MenuUsuario extends JFrame {
+public class MenuUsuarioView extends JFrame {
 
 	private JPanel contentPane;
 	int xMouse, yMouse;
@@ -24,7 +24,7 @@ public class MenuUsuario extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					MenuUsuario frame = new MenuUsuario();
+					MenuUsuarioView frame = new MenuUsuarioView();
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -36,8 +36,8 @@ public class MenuUsuario extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public MenuUsuario() {
-		setIconImage(Toolkit.getDefaultToolkit().getImage(MenuUsuario.class.getResource("/imagenes/aH-40px.png")));
+	public MenuUsuarioView() {
+		setIconImage(Toolkit.getDefaultToolkit().getImage(MenuUsuarioView.class.getResource("/imagenes/aH-40px.png")));
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 944, 609);
 		contentPane = new JPanel();
@@ -72,7 +72,7 @@ public class MenuUsuario extends JFrame {
 		JLabel lblNewLabel_2 = new JLabel("");
 		lblNewLabel_2.setBounds(50, 58, 150, 150);
 		panelMenu.add(lblNewLabel_2);
-		lblNewLabel_2.setIcon(new ImageIcon(MenuUsuario.class.getResource("/imagenes/aH-150px.png")));
+		lblNewLabel_2.setIcon(new ImageIcon(MenuUsuarioView.class.getResource("/imagenes/aH-150px.png")));
 		
 		JPanel btnRegistro = new JPanel();
 		btnRegistro.addMouseListener(new MouseAdapter() {
@@ -97,7 +97,7 @@ public class MenuUsuario extends JFrame {
 		btnRegistro.setLayout(null);
 		
 		labelRegistro = new JLabel("Registro de reservas");
-		labelRegistro.setIcon(new ImageIcon(MenuUsuario.class.getResource("/imagenes/reservado.png")));
+		labelRegistro.setIcon(new ImageIcon(MenuUsuarioView.class.getResource("/imagenes/reservado.png")));
 		labelRegistro.setForeground(SystemColor.text);
 		labelRegistro.setBounds(25, 11, 205, 34);
 		labelRegistro.setFont(new Font("Roboto", Font.PLAIN, 18));
@@ -116,8 +116,8 @@ public class MenuUsuario extends JFrame {
 			}
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				Busqueda busqueda = new Busqueda();
-				busqueda.setVisible(true);
+				BusquedaView busquedaView = new BusquedaView();
+				busquedaView.setVisible(true);
 				dispose();
 			}
 		});
@@ -127,7 +127,7 @@ public class MenuUsuario extends JFrame {
 		btnBusqueda.setLayout(null);
 		
 		JLabel lblBusquedaDeReservas = new JLabel("Búsqueda");
-		lblBusquedaDeReservas.setIcon(new ImageIcon(MenuUsuario.class.getResource("/imagenes/pessoas.png")));
+		lblBusquedaDeReservas.setIcon(new ImageIcon(MenuUsuarioView.class.getResource("/imagenes/pessoas.png")));
 		lblBusquedaDeReservas.setBounds(27, 11, 200, 34);
 		lblBusquedaDeReservas.setHorizontalAlignment(SwingConstants.LEFT);
 		lblBusquedaDeReservas.setForeground(Color.WHITE);

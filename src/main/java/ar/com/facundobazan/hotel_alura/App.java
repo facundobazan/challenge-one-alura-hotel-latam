@@ -2,7 +2,7 @@ package ar.com.facundobazan.hotel_alura;
 
 import ar.com.facundobazan.hotel_alura.entities.records.RegistroPrecio;
 import ar.com.facundobazan.hotel_alura.services.PrecioServicio;
-import ar.com.facundobazan.hotel_alura.views.MenuPrincipal;
+import ar.com.facundobazan.hotel_alura.views.MenuPrincipalView;
 
 public class App {
 
@@ -17,7 +17,7 @@ public class App {
         //AuthService authService = new AuthService();
         //authService.RegistrarUsuario(new RegistroUsuario("dev@dev", "dev", "dev"));
 
-        var form = new MenuPrincipal();
+        var form = new MenuPrincipalView();
         form.setVisible(true);
     }
 

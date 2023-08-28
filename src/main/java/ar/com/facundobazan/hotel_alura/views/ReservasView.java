@@ -2,6 +2,7 @@ package ar.com.facundobazan.hotel_alura.views;
 
 import ar.com.facundobazan.hotel_alura.entities.FormaPago;
 import ar.com.facundobazan.hotel_alura.entities.records.RegistroPrecio;
+import ar.com.facundobazan.hotel_alura.entities.records.RegistroReserva;
 import ar.com.facundobazan.hotel_alura.services.PrecioServicio;
 import ar.com.facundobazan.hotel_alura.services.ReservaServicio;
 import com.toedter.calendar.JDateChooser;
@@ -159,7 +160,7 @@ public class ReservasView extends JFrame {
         btnexit.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                MenuPrincipal principal = new MenuPrincipal();
+                MenuPrincipalView principal = new MenuPrincipalView();
                 principal.setVisible(true);
                 dispose();
             }
@@ -211,7 +212,7 @@ public class ReservasView extends JFrame {
         btnAtras.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                MenuUsuario usuario = new MenuUsuario();
+                MenuUsuarioView usuario = new MenuUsuarioView();
                 usuario.setVisible(true);
                 dispose();
             }
@@ -298,7 +299,7 @@ public class ReservasView extends JFrame {
         txtFechaEntrada.addPropertyChangeListener(propertyChangeEvent -> {
             txtFechaSalida.setMinSelectableDate(txtFechaEntrada.getDate());
             //if (txtFechaSalida.getDate().after(txtFechaSalida.getDate()))
-                txtFechaSalida.setDate(txtFechaEntrada.getDate());
+            txtFechaSalida.setDate(txtFechaEntrada.getDate());
             actualizarPrecio();
         });
         txtFechaSalida.addPropertyChangeListener(propertyChangeEvent -> actualizarPrecio());
@@ -319,7 +320,9 @@ public class ReservasView extends JFrame {
         btnsiguiente.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                /*if (ReservasView.txtFechaEntrada.getDate() != null && ReservasView.txtFechaSalida.getDate() != null) {
+
+                if (ReservasView.txtFechaEntrada.getDate() != null && ReservasView.txtFechaSalida.getDate() != null) {
+
                     ReservaServicio reservaServicio = new ReservaServicio();
                     Long id = reservaServicio.registrarReserva(new RegistroReserva(
                             null,
@@ -328,14 +331,14 @@ public class ReservasView extends JFrame {
                             0.0,
                             formaPagoSeleccionada
                     ));
-                    RegistroHuesped registro = new RegistroHuesped(id);
+
+                    RegistroHuespedView registro = new RegistroHuespedView(id);
                     registro.setVisible(true);
                     dispose();
                 } else {
-                    JOptionPane.showMessageDialog(null, "Debes llenar todos los campos.");
-                }*/
-                //  TODO: Emplear formulario fmxl
 
+                    JOptionPane.showMessageDialog(null, "Debes llenar todos los campos.");
+                }
             }
         });
         btnsiguiente.setLayout(null);

@@ -6,7 +6,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
-public class BuscarHuesped extends Application {
+public class BuscarHuespedView extends Application {
 
     public static void main(String[] args) {
 
@@ -16,7 +16,7 @@ public class BuscarHuesped extends Application {
     @Override
     public void start(Stage stage) throws Exception {
 
-        Parent root = FXMLLoader.load(BuscarHuesped.class.getResource("/views/buscar-huesped.fxml"));
+        Parent root = FXMLLoader.load(BuscarHuespedView.class.getResource("/views/buscar-huesped.fxml"));
         Scene scene = new Scene(root);
 
         stage.setTitle("Buscar Huesped");

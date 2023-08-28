@@ -1,5 +1,7 @@
 package ar.com.facundobazan.hotel_alura.views;
 
+import ar.com.facundobazan.hotel_alura.entities.records.RegistroHuesped;
+import ar.com.facundobazan.hotel_alura.services.HuespedServicio;
 import com.toedter.calendar.JDateChooser;
 
 import javax.swing.*;
@@ -8,10 +10,12 @@ import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
+import java.sql.Date;
 import java.text.Format;
+import java.time.ZoneId;
 
 @SuppressWarnings("serial")
-public class RegistroHuesped extends JFrame {
+public class RegistroHuespedView extends JFrame {
 
     private JPanel contentPane;
     private JTextField txtNombre;
@@ -24,6 +28,8 @@ public class RegistroHuesped extends JFrame {
     private JLabel labelAtras;
     int xMouse, yMouse;
     private long nroReserva;
+    private static String documentoHuesped;
+    private static ar.com.facundobazan.hotel_alura.entities.records.RegistroHuesped huesped;
 
     /**
      * Launch the application.
@@ -32,7 +38,7 @@ public class RegistroHuesped extends JFrame {
         EventQueue.invokeLater(new Runnable() {
             public void run() {
                 try {
-                    RegistroHuesped frame = new RegistroHuesped();
+                    RegistroHuespedView frame = new RegistroHuespedView();
                     frame.setVisible(true);
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -41,7 +47,7 @@ public class RegistroHuesped extends JFrame {
         });
     }
 
-    public RegistroHuesped(Long nroReserva) {
+    public RegistroHuespedView(Long nroReserva) {
 
         this.nroReserva = nroReserva;
         cargarCompponentes();
@@ -50,13 +56,13 @@ public class RegistroHuesped extends JFrame {
     /**
      * Create the frame.
      */
-    public RegistroHuesped() {
+    public RegistroHuespedView() {
 
         cargarCompponentes();
     }
 
     private void cargarCompponentes() {
-        setIconImage(Toolkit.getDefaultToolkit().getImage(RegistroHuesped.class.getResource("/imagenes/lOGO-50PX.png")));
+        setIconImage(Toolkit.getDefaultToolkit().getImage(RegistroHuespedView.class.getResource("/imagenes/lOGO-50PX.png")));
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setBounds(100, 100, 910, 634);
         contentPane = new JPanel();
@@ -140,7 +146,7 @@ public class RegistroHuesped extends JFrame {
 
         txtFechaN = new JDateChooser();
         txtFechaN.setBounds(560, 278, 285, 36);
-        txtFechaN.getCalendarButton().setIcon(new ImageIcon(RegistroHuesped.class.getResource("/imagenes/icon-reservas.png")));
+        txtFechaN.getCalendarButton().setIcon(new ImageIcon(RegistroHuespedView.class.getResource("/imagenes/icon-reservas.png")));
         txtFechaN.getCalendarButton().setBackground(SystemColor.textHighlight);
         txtFechaN.setDateFormatString("yyyy-MM-dd");
         contentPane.add(txtFechaN);
@@ -251,6 +257,8 @@ public class RegistroHuesped extends JFrame {
         btnguardar.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
+
+                guardarHuesped();
             }
         });
         btnguardar.setLayout(null);
@@ -274,12 +282,12 @@ public class RegistroHuesped extends JFrame {
         JLabel imagenFondo = new JLabel("");
         imagenFondo.setBounds(0, 121, 479, 502);
         panel.add(imagenFondo);
-        imagenFondo.setIcon(new ImageIcon(RegistroHuesped.class.getResource("/imagenes/registro.png")));
+        imagenFondo.setIcon(new ImageIcon(RegistroHuespedView.class.getResource("/imagenes/registro.png")));
 
         JLabel logo = new JLabel("");
         logo.setBounds(194, 39, 104, 107);
         panel.add(logo);
-        logo.setIcon(new ImageIcon(RegistroHuesped.class.getResource("/imagenes/Ha-100px.png")));
+        logo.setIcon(new ImageIcon(RegistroHuespedView.class.getResource("/imagenes/Ha-100px.png")));
 
         JPanel btnexit = new JPanel();
         btnexit.setBounds(857, 0, 53, 36);
@@ -287,7 +295,7 @@ public class RegistroHuesped extends JFrame {
         btnexit.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                MenuPrincipal principal = new MenuPrincipal();
+                MenuPrincipalView principal = new MenuPrincipalView();
                 principal.setVisible(true);
                 dispose();
             }
@@ -315,6 +323,140 @@ public class RegistroHuesped extends JFrame {
         labelExit.setFont(new Font("Roboto", Font.PLAIN, 18));
 
         txtNreserva.setText(String.valueOf(nroReserva));
+
+        consultarDocumento();
+    }
+
+    private void guardarHuesped() {
+
+        boolean esValido = validarCampos();
+        if (esValido) {
+
+            HuespedServicio huespedServicio = new HuespedServicio();
+            huespedServicio.registrarReserva(new RegistroHuesped(
+                    txtApellido.getText(),
+                    txtNombre.getText(),
+                    documentoHuesped,
+                    txtFechaN.getDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate(),
+                    txtNacionalidad.getSelectedItem().toString(),
+                    txtTelefono.getText()),
+                    nroReserva);
+        }
+
+        JOptionPane.showConfirmDialog(null,
+                "Reserva confirmada.",
+                "Reserva",
+                JOptionPane.DEFAULT_OPTION,
+                JOptionPane.INFORMATION_MESSAGE);
+    }
+
+    private boolean validarCampos() {
+
+        if (this.txtNombre.getText().isEmpty()) {
+
+            mostrarErrorValidacion("nombre");
+            txtNombre.requestFocus();
+            return false;
+        }
+        if (this.txtApellido.getText().isEmpty()) {
+            mostrarErrorValidacion("apellido");
+            txtApellido.requestFocus();
+            return false;
+        }
+        if (this.txtFechaN.getDate() == null) {
+            mostrarErrorValidacion("fecha de nacimiento");
+            txtTelefono.requestFocus();
+            return false;
+        }
+        if (this.txtTelefono.getText().isEmpty()) {
+            mostrarErrorValidacion("telefono");
+            txtTelefono.requestFocus();
+            return false;
+        }
+        if (this.nroReserva == 0) {
+            mostrarErrorValidacion("reserva");
+            return false;
+        }
+        return true;
+    }
+
+    private void mostrarErrorValidacion(String elemento) {
+
+        JOptionPane.showConfirmDialog(
+                null,
+                String.format("El campo %s no puede estar vacío.\n" +
+                        "Comprueba los campos antes de continuar.", elemento),
+                "Error en validación",
+                JOptionPane.DEFAULT_OPTION,
+                JOptionPane.WARNING_MESSAGE);
+    }
+
+    private void consultarDocumento() {
+
+        documentoHuesped = "";
+        while (documentoHuesped.isBlank()) {
+
+            String result = JOptionPane.showInputDialog(null, "Ingresa el documento del comprador",
+                    "Buscador de huespedes", JOptionPane.QUESTION_MESSAGE);
+
+            if (result.matches("^\\d{6,12}$")) {
+
+                documentoHuesped = result;
+            } else {
+
+                JOptionPane.showConfirmDialog(null, "Solo se permiten números, de 6 a 12 digitos.",
+                        "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        }
+
+        HuespedServicio huespedServicio = new HuespedServicio();
+        huesped = huespedServicio.buscarPorDocumento(documentoHuesped);
+
+        if (huesped == null) {
+
+            int opcion = JOptionPane.showConfirmDialog(
+                    null,
+                    "No se encontraron resultados.\n¿Desea continuar con el registro?",
+                    "Resultado de la busqueda",
+                    JOptionPane.YES_NO_OPTION,
+                    JOptionPane.WARNING_MESSAGE);
+
+            switch (opcion) {
+                case JOptionPane.YES_OPTION -> continuarReserva();
+                case JOptionPane.NO_OPTION -> cancelarReserva();
+            }
+        } else {
+            this.txtApellido.setText(huesped.apellido());
+            this.txtNombre.setText(huesped.nombre());
+            this.txtFechaN.setDate(Date.from(
+                    huesped.fechaNacimiento().atStartOfDay()
+                            .atZone(ZoneId.systemDefault()).toInstant()));
+            this.txtTelefono.setText(huesped.telefono());
+            this.txtNacionalidad.setSelectedItem(huesped.nacionalidad());
+        }
+    }
+
+    private static void continuarReserva() {
+    }
+
+    private static void cancelarReserva() {
+        //dispose();
+
+        /*int opcion = JOptionPane.showConfirmDialog(
+                null,
+                "¿Reintentar consulta?",
+                "Resultado de la busqueda",
+                JOptionPane.YES_NO_OPTION,
+                JOptionPane.QUESTION_MESSAGE);
+
+        switch (opcion) {
+            case JOptionPane.YES_OPTION -> consultarDocumento();
+            case JOptionPane.NO_OPTION -> this.dispose();
+        }*/
+
+        // TODO: Borrar Reserva
+        /*MenuPrincipal principal = new MenuPrincipal();
+        principal.setVisible(true);*/
     }
 
 
@@ -329,5 +471,4 @@ public class RegistroHuesped extends JFrame {
         int y = evt.getYOnScreen();
         this.setLocation(x - xMouse, y - yMouse);
     }
-
 }

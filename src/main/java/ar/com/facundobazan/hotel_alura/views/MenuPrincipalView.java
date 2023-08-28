@@ -8,7 +8,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
 
 @SuppressWarnings("serial")
-public class MenuPrincipal extends JFrame {
+public class MenuPrincipalView extends JFrame {
 
 	private JPanel contentPane;
 	private JLabel labelExit;
@@ -21,7 +21,7 @@ public class MenuPrincipal extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					MenuPrincipal frame = new MenuPrincipal();
+					MenuPrincipalView frame = new MenuPrincipalView();
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -33,8 +33,8 @@ public class MenuPrincipal extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public MenuPrincipal() {
-		setIconImage(Toolkit.getDefaultToolkit().getImage(MenuPrincipal.class.getResource("/imagenes/aH-40px.png")));
+	public MenuPrincipalView() {
+		setIconImage(Toolkit.getDefaultToolkit().getImage(MenuPrincipalView.class.getResource("/imagenes/aH-40px.png")));
 		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 		setBounds(100, 100, 910, 537);
 		contentPane = new JPanel();
@@ -54,12 +54,12 @@ public class MenuPrincipal extends JFrame {
 		
 		JLabel imagenFondo = new JLabel("");
 		imagenFondo.setBounds(-50, 0, 732, 501);
-		imagenFondo.setIcon(new ImageIcon(MenuPrincipal.class.getResource("/imagenes/menu-img.png")));
+		imagenFondo.setIcon(new ImageIcon(MenuPrincipalView.class.getResource("/imagenes/menu-img.png")));
 		panel.add(imagenFondo);
 		
 		JLabel logo = new JLabel("");
 		logo.setBounds(722, 80, 150, 156);
-		logo.setIcon(new ImageIcon(MenuPrincipal.class.getResource("/imagenes/aH-150px.png")));
+		logo.setIcon(new ImageIcon(MenuPrincipalView.class.getResource("/imagenes/aH-150px.png")));
 		panel.add(logo);
 		
 		JPanel panel_1 = new JPanel();
@@ -134,8 +134,8 @@ public class MenuPrincipal extends JFrame {
 		btnLogin.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				Login login = new Login();
-				login.setVisible(true);
+				LoginView loginView = new LoginView();
+				loginView.setVisible(true);
 				dispose();
 			}
 		});
@@ -148,7 +148,7 @@ public class MenuPrincipal extends JFrame {
 		imagenLogin.setBounds(0, 0, 80, 70);
 		btnLogin.add(imagenLogin);
 		imagenLogin.setHorizontalAlignment(SwingConstants.CENTER);
-		imagenLogin.setIcon(new ImageIcon(MenuPrincipal.class.getResource("/imagenes/login.png")));
+		imagenLogin.setIcon(new ImageIcon(MenuPrincipalView.class.getResource("/imagenes/login.png")));
 		
 		JLabel lblTitulo = new JLabel("LOGIN");
 		lblTitulo.setBounds(754, 265, 83, 24);

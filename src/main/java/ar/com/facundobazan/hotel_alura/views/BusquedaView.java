@@ -9,7 +9,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
 
 @SuppressWarnings("serial")
-public class Busqueda extends JFrame {
+public class BusquedaView extends JFrame {
 
 	private JPanel contentPane;
 	private JTextField txtBuscar;
@@ -28,7 +28,7 @@ public class Busqueda extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					Busqueda frame = new Busqueda();
+					BusquedaView frame = new BusquedaView();
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -40,8 +40,8 @@ public class Busqueda extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public Busqueda() {
-		setIconImage(Toolkit.getDefaultToolkit().getImage(Busqueda.class.getResource("/imagenes/lupa2.png")));
+	public BusquedaView() {
+		setIconImage(Toolkit.getDefaultToolkit().getImage(BusquedaView.class.getResource("/imagenes/lupa2.png")));
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 910, 571);
 		contentPane = new JPanel();
@@ -84,7 +84,7 @@ public class Busqueda extends JFrame {
 		modelo.addColumn("Valor");
 		modelo.addColumn("Forma de Pago");
 		JScrollPane scroll_table = new JScrollPane(tbReservas);
-		panel.addTab("Reservas", new ImageIcon(Busqueda.class.getResource("/imagenes/reservado.png")), scroll_table, null);
+		panel.addTab("Reservas", new ImageIcon(BusquedaView.class.getResource("/imagenes/reservado.png")), scroll_table, null);
 		scroll_table.setVisible(true);
 		
 		
@@ -100,11 +100,11 @@ public class Busqueda extends JFrame {
 		modeloHuesped.addColumn("Telefono");
 		modeloHuesped.addColumn("Número de Reserva");
 		JScrollPane scroll_tableHuespedes = new JScrollPane(tbHuespedes);
-		panel.addTab("Huéspedes", new ImageIcon(Busqueda.class.getResource("/imagenes/pessoas.png")), scroll_tableHuespedes, null);
+		panel.addTab("Huéspedes", new ImageIcon(BusquedaView.class.getResource("/imagenes/pessoas.png")), scroll_tableHuespedes, null);
 		scroll_tableHuespedes.setVisible(true);
 		
 		JLabel lblNewLabel_2 = new JLabel("");
-		lblNewLabel_2.setIcon(new ImageIcon(Busqueda.class.getResource("/imagenes/Ha-100px.png")));
+		lblNewLabel_2.setIcon(new ImageIcon(BusquedaView.class.getResource("/imagenes/Ha-100px.png")));
 		lblNewLabel_2.setBounds(56, 51, 104, 107);
 		contentPane.add(lblNewLabel_2);
 		
@@ -131,7 +131,7 @@ public class Busqueda extends JFrame {
 		btnAtras.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				MenuUsuario usuario = new MenuUsuario();
+				MenuUsuarioView usuario = new MenuUsuarioView();
 				usuario.setVisible(true);
 				dispose();				
 			}
@@ -161,7 +161,7 @@ public class Busqueda extends JFrame {
 		btnexit.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				MenuUsuario usuario = new MenuUsuario();
+				MenuUsuarioView usuario = new MenuUsuarioView();
 				usuario.setVisible(true);
 				dispose();
 			}
