@@ -215,6 +215,7 @@ public class RegistroHuespedView extends JFrame {
         txtNreserva.setBackground(Color.WHITE);
         txtNreserva.setBorder(BorderFactory.createEmptyBorder());
         contentPane.add(txtNreserva);
+        txtNreserva.setEditable(false);
 
         JSeparator separator_1_2 = new JSeparator();
         separator_1_2.setBounds(560, 170, 289, 2);
@@ -433,6 +434,12 @@ public class RegistroHuespedView extends JFrame {
                             .atZone(ZoneId.systemDefault()).toInstant()));
             this.txtTelefono.setText(huesped.telefono());
             this.txtNacionalidad.setSelectedItem(huesped.nacionalidad());
+
+            txtApellido.setEditable(false);
+            txtNombre.setEditable(false);
+            txtFechaN.setEnabled(false);
+            txtTelefono.setEditable(false);
+            txtNacionalidad.setEnabled(false);
         }
     }
 
