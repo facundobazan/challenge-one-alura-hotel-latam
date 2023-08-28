@@ -97,7 +97,7 @@
             </Button>
          </left>
          <right>
-            <Button fx:id="btnContinuar" mnemonicParsing="false" onAction="#ContinuarReserva" prefWidth="120.0" style="-fx-background-color: #2c2;" text="Continuar" textFill="WHITE" BorderPane.alignment="CENTER">
+            <Button fx:id="btnContinuar" mnemonicParsing="false" onAction="#continuarReserva" prefWidth="120.0" style="-fx-background-color: #2c2;" text="Continuar" textFill="WHITE" BorderPane.alignment="CENTER">
                <font>
                   <Font name="System Bold" size="16.0" />
                </font>
