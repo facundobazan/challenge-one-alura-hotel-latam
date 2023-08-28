@@ -19,7 +19,7 @@ public class Reserva {
     @Enumerated(EnumType.STRING)
     private FormaPago formaPago;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Huesped huesped;
 
     public Reserva() {

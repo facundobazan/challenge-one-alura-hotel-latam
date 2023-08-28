@@ -39,9 +39,10 @@ public class ReservaDAO implements Crud<Reserva> {
     }
 
     @Override
-    public void create(Reserva reserva) {
+    public Reserva create(Reserva reserva) {
 
         this.entityManager.persist(reserva);
+        return reserva;
     }
 
     public Long reservar(Reserva reserva) {

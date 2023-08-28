@@ -25,7 +25,7 @@ public class Huesped {
     private String nacionalidad;
     private String telefono;
 
-    @OneToMany(fetch = FetchType.EAGER, orphanRemoval = true, cascade = CascadeType.PERSIST)
+    @OneToMany(fetch = FetchType.EAGER, orphanRemoval = true, cascade = CascadeType.ALL)
     private List<Reserva> reservas;
 
     public Huesped() {

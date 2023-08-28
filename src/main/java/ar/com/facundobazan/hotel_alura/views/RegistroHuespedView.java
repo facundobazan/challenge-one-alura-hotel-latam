@@ -7,9 +7,7 @@ import com.toedter.calendar.JDateChooser;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseMotionAdapter;
+import java.awt.event.*;
 import java.sql.Date;
 import java.text.Format;
 import java.time.ZoneId;
@@ -26,6 +24,7 @@ public class RegistroHuespedView extends JFrame {
     private JComboBox<Format> txtNacionalidad;
     private JLabel labelExit;
     private JLabel labelAtras;
+    private JPanel btnexit;
     int xMouse, yMouse;
     private long nroReserva;
     private static String documentoHuesped;
@@ -98,9 +97,7 @@ public class RegistroHuespedView extends JFrame {
         btnAtras.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                ReservasView reservas = new ReservasView();
-                reservas.setVisible(true);
-                dispose();
+                volverAtras();
             }
 
             @Override
@@ -290,15 +287,13 @@ public class RegistroHuespedView extends JFrame {
         panel.add(logo);
         logo.setIcon(new ImageIcon(RegistroHuespedView.class.getResource("/imagenes/Ha-100px.png")));
 
-        JPanel btnexit = new JPanel();
+        btnexit = new JPanel();
         btnexit.setBounds(857, 0, 53, 36);
         contentPane.add(btnexit);
         btnexit.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                MenuPrincipalView principal = new MenuPrincipalView();
-                principal.setVisible(true);
-                dispose();
+                cerrarSession();
             }
 
             @Override
@@ -328,6 +323,24 @@ public class RegistroHuespedView extends JFrame {
         consultarDocumento();
     }
 
+    private void volverAtras() {
+        ReservasView reservas = new ReservasView();
+        reservas.setVisible(true);
+        dispose();
+    }
+
+    private void regresarMenu() {
+        MenuUsuarioView menuUsuario = new MenuUsuarioView();
+        menuUsuario.setVisible(true);
+        dispose();
+    }
+
+    private void cerrarSession() {
+        MenuPrincipalView principal = new MenuPrincipalView();
+        principal.setVisible(true);
+        dispose();
+    }
+
     private void guardarHuesped() {
 
         boolean esValido = validarCampos();
@@ -349,6 +362,8 @@ public class RegistroHuespedView extends JFrame {
                 "Reserva",
                 JOptionPane.DEFAULT_OPTION,
                 JOptionPane.INFORMATION_MESSAGE);
+
+        regresarMenu();
     }
 
     private boolean validarCampos() {

@@ -6,7 +6,7 @@ public interface Crud<T> {
 
     T getOne(Long id);
     List<T> getAll();
-    void create(T t);
+    T create(T t);
     void update(T t);
     void delete(Long id);
 }

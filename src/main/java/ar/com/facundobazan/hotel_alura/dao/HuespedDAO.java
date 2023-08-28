@@ -25,7 +25,7 @@ public class HuespedDAO implements Crud<Huesped> {
         return this.entityManager.find(Huesped.class, id);
     }
 
-    public Huesped getByDocumento(String documento){
+    public Huesped getByDocument(String documento){
 
         String query = "SELECT H FROM Huesped H WHERE documento = :documento";
         TypedQuery<Huesped> typedQuery = this.entityManager.createQuery(query, Huesped.class);
@@ -56,9 +56,10 @@ public class HuespedDAO implements Crud<Huesped> {
     }
 
     @Override
-    public void create(Huesped huesped) {
+    public Huesped create(Huesped huesped) {
 
         this.entityManager.persist(huesped);
+        return huesped;
     }
 
     @Override
