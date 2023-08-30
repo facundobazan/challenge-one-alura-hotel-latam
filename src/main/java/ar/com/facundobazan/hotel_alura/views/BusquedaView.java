@@ -14,7 +14,11 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionAdapter;
 import java.util.ArrayList;
-import java.util.Vector;
+import java.util.Arrays;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
+
+import static java.util.Arrays.stream;
 
 @SuppressWarnings("serial")
 public class BusquedaView extends JFrame {
@@ -31,6 +35,7 @@ public class BusquedaView extends JFrame {
     private JLabel labelExit;
     private Tabla tabSeleccionado;
     private JTabbedPane panel;
+    private String filtroBusqueda;
     int xMouse, yMouse;
 
     /**
@@ -213,6 +218,9 @@ public class BusquedaView extends JFrame {
             @Override
             public void mouseClicked(MouseEvent e) {
 
+                filtroBusqueda = txtBuscar.getText();
+                poblarTabla();
+                txtBuscar.setText("");
             }
         });
         btnbuscar.setLayout(null);
@@ -284,7 +292,34 @@ public class BusquedaView extends JFrame {
             }
         });
 
-        panel.addChangeListener(c -> poblarTabla());
+        panel.addChangeListener(c -> {
+
+            txtBuscar.setText("");
+            poblarTabla();
+        });
+
+        this.filtroBusqueda = txtBuscar.getText();
+        System.out.println(txtBuscar.getText());
+        System.out.println(txtBuscar);
+        poblarTabla();
+    }
+
+    private void pruebaFiltro() {
+
+        switch (tabSeleccionado) {
+            case HUESPEDES -> {
+
+                var h = huespedes.stream().filter(huesped -> {
+                    return huesped.apellido().contains(filtroBusqueda) || huesped.nombre().contains(filtroBusqueda);
+                }).collect(Collectors.toList());
+            }
+            case RESERVAS -> {
+                System.out.println("Prueba filtro reservas");
+            }
+        }
+    }
+
+    private void filtrarCampos() {
 
         poblarTabla();
     }
@@ -331,9 +366,18 @@ public class BusquedaView extends JFrame {
     private void poblarTablaHuespedes() {
 
         borrarTabla(tbHuespedes);
-        poblarListaHuespedes();
+        ArrayList<RegistroHuesped> lista = new ArrayList<>();
+        if (filtroBusqueda.isEmpty()) {
 
-        for (RegistroHuesped h : huespedes)
+            poblarListaHuespedes();
+            lista = huespedes;
+
+        } else {
+
+            lista = filtrarListaHuespedes();
+        }
+
+        for (RegistroHuesped h : lista)
             ((DefaultTableModel) tbHuespedes.getModel()).addRow(new String[]{
                     h.id().toString(),
                     h.nombre(),
@@ -344,12 +388,35 @@ public class BusquedaView extends JFrame {
                     "NO DISPONIBLE"});
     }
 
+    private ArrayList<RegistroReserva> filtrarListaReservas() {
+
+        return (ArrayList<RegistroReserva>) reservas.stream()
+                .filter(r -> r.id().toString().contains(filtroBusqueda))
+                .collect(Collectors.toList());
+    }
+
+    private ArrayList<RegistroHuesped> filtrarListaHuespedes() {
+
+        return (ArrayList<RegistroHuesped>) huespedes.stream()
+                .filter(h -> h.apellido().contains(filtroBusqueda) || h.nombre().contains(filtroBusqueda))
+                .collect(Collectors.toList());
+    }
+
     private void poblarTablaReservas() {
 
         borrarTabla(tbReservas);
-        poblarListaReservas();
+        ArrayList<RegistroReserva> lista = new ArrayList<>();
+        if (filtroBusqueda.isEmpty()) {
 
-        for (RegistroReserva r : reservas)
+            poblarListaReservas();
+            lista = reservas;
+
+        } else {
+
+            lista = filtrarListaReservas();
+        }
+
+        for (RegistroReserva r : lista)
             ((DefaultTableModel) tbReservas.getModel()).addRow(new String[]{
                     r.id().toString(),
                     r.fechaEntrada().toString(),
@@ -361,13 +428,13 @@ public class BusquedaView extends JFrame {
     private void poblarListaReservas() {
 
         ReservaServicio reservaServicio = new ReservaServicio();
-        reservas = reservaServicio.obtenerReservas();
+        this.reservas = reservaServicio.obtenerReservas();
     }
 
     private void poblarListaHuespedes() {
 
         HuespedServicio huespedServicio = new HuespedServicio();
-        huespedes = huespedServicio.obtenerHuespedes();
+        this.huespedes = huespedServicio.obtenerHuespedes();
     }
 
     //Código que permite mover la ventana por la pantalla según la posición de "x" y "y"
