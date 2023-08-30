@@ -110,4 +110,18 @@ public class HuespedServicio {
 
         return huespedes;
     }
+
+    public void borrarHuesped(long id) {
+
+        try(EntityManager em = JPAUtil.getEntityManager()){
+
+            HuespedDAO huespedDAO = new HuespedDAO(em);
+            em.getTransaction().begin();
+            huespedDAO.delete(id);
+            em.getTransaction().commit();
+        } catch (Exception e){
+
+            e.printStackTrace();
+        }
+    }
 }

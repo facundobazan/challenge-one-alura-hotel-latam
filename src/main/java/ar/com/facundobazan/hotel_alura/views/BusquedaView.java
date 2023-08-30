@@ -1,5 +1,6 @@
 package ar.com.facundobazan.hotel_alura.views;
 
+import ar.com.facundobazan.hotel_alura.entities.Huesped;
 import ar.com.facundobazan.hotel_alura.entities.records.RegistroHuesped;
 import ar.com.facundobazan.hotel_alura.entities.records.RegistroReserva;
 import ar.com.facundobazan.hotel_alura.services.HuespedServicio;
@@ -343,12 +344,11 @@ public class BusquedaView extends JFrame {
     private void borrarRegistro(JTable tabla) {
 
         if (tabla.getSelectedRow() != -1) {
-            long id;
+            long id = Long.valueOf(tabla.getValueAt(tabla.getSelectedRow(),0).toString());
 
             switch (tabSeleccionado) {
                 case RESERVAS -> {
 
-                    id = Long.valueOf(tabla.getValueAt(tabla.getSelectedRow(),0).toString());
                     int opcion = JOptionPane.showConfirmDialog(
                             null,
                             String.format("Estas por borrar la reserva nro=%s.\n¿Deseas continuar?", id),
@@ -364,7 +364,44 @@ public class BusquedaView extends JFrame {
                             reservaServicio.borrarReservaAsignada(id);
                             JOptionPane.showMessageDialog(
                                     null,
-                                    "Operación cancelada.",
+                                    "Reserva cancelada.",
+                                    "Aviso",
+                                    JOptionPane.INFORMATION_MESSAGE);
+
+                            filtroBusqueda = "";
+                            poblarTabla();
+                        } catch (Exception e) {
+
+                            e.printStackTrace();
+                        }
+                    } else {
+                        JOptionPane.showMessageDialog(
+                                null,
+                                "Operación cancelada.",
+                                "Aviso",
+                                JOptionPane.INFORMATION_MESSAGE);
+                    }
+                }
+                case HUESPEDES -> {
+
+                    String apellido = tabla.getValueAt(tabla.getSelectedRow(),2).toString();
+                    String nombre = tabla.getValueAt(tabla.getSelectedRow(),1).toString();
+                    int opcion = JOptionPane.showConfirmDialog(
+                            null,
+                            String.format("¿Deseas borrar a %s , %s?\n.Se borraran también todas sus reservas asociadas.", apellido, nombre, id),
+                            "Borrar huésped",
+                            JOptionPane.YES_NO_OPTION,
+                            JOptionPane.QUESTION_MESSAGE);
+
+                    if (opcion == 0) {
+
+                        try {
+
+                            HuespedServicio huespedServicio = new HuespedServicio();
+                            huespedServicio.borrarHuesped(id);
+                            JOptionPane.showMessageDialog(
+                                    null,
+                                    "Huésped eliminado.",
                                     "Aviso",
                                     JOptionPane.INFORMATION_MESSAGE);
 
