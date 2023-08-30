@@ -11,8 +11,10 @@ import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionAdapter;
 import java.util.ArrayList;
+import java.util.Vector;
 
 @SuppressWarnings("serial")
 public class BusquedaView extends JFrame {
@@ -27,6 +29,8 @@ public class BusquedaView extends JFrame {
     private DefaultTableModel modeloHuesped;
     private JLabel labelAtras;
     private JLabel labelExit;
+    private Tabla tabSeleccionado;
+    private JTabbedPane panel;
     int xMouse, yMouse;
 
     /**
@@ -73,11 +77,11 @@ public class BusquedaView extends JFrame {
         lblNewLabel_4.setBounds(331, 62, 280, 42);
         contentPane.add(lblNewLabel_4);
 
-        JTabbedPane panel = new JTabbedPane(JTabbedPane.TOP);
-        panel.setBackground(new Color(12, 138, 199));
-        panel.setFont(new Font("Roboto", Font.PLAIN, 16));
-        panel.setBounds(20, 169, 865, 328);
-        contentPane.add(panel);
+        this.panel = new JTabbedPane(JTabbedPane.TOP);
+        this.panel.setBackground(new Color(12, 138, 199));
+        this.panel.setFont(new Font("Roboto", Font.PLAIN, 16));
+        this.panel.setBounds(20, 169, 865, 328);
+        contentPane.add(this.panel);
 
 
         tbReservas = new JTable();
@@ -252,29 +256,83 @@ public class BusquedaView extends JFrame {
         lblEliminar.setBounds(0, 0, 122, 35);
         btnEliminar.add(lblEliminar);
         setResizable(false);
+        btnEliminar.addMouseListener(new MouseListener() {
+            @Override
+            public void mouseClicked(MouseEvent mouseEvent) {
 
-        panel.addChangeListener(changeEvent -> {
-            System.out.println(panel.getSelectedIndex() == 0 ? "reservas" : "huespedes");
-            //poblarReservas();
+                borrarRegistro();
+            }
+
+            @Override
+            public void mousePressed(MouseEvent mouseEvent) {
+
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent mouseEvent) {
+
+            }
+
+            @Override
+            public void mouseEntered(MouseEvent mouseEvent) {
+
+            }
+
+            @Override
+            public void mouseExited(MouseEvent mouseEvent) {
+
+            }
         });
 
-        poblarListaReservas();
-        poblarListaHuespedes();
-        poblarTablaReservas();
-        poblarTablaHuespedes();
+        panel.addChangeListener(c -> poblarTabla());
+
+        poblarTabla();
+    }
+
+    private void borrarRegistro() {
+
+        switch (tabSeleccionado) {
+
+            case HUESPEDES -> borrarRegistro(tbHuespedes);
+            case RESERVAS -> borrarRegistro(tbReservas);
+        }
+    }
+
+    private void borrarRegistro(JTable tabla) {
+
+        int filaSeleccionada = tabla.getSelectedRow();
+        if (filaSeleccionada != -1) ((DefaultTableModel) tabla.getModel()).removeRow(filaSeleccionada);
+    }
+
+    private void borrarTabla(JTable tabla) {
+
+        ((DefaultTableModel) tabla.getModel()).getDataVector().clear();
+    }
+
+    private void poblarTabla(JTable tabla) {
+
+        switch (tabSeleccionado) {
+
+            case RESERVAS -> poblarTablaReservas();
+            case HUESPEDES -> poblarTablaHuespedes();
+        }
+    }
+
+    private void poblarTabla() {
+
+        tabSeleccionado = Tabla.values()[this.panel.getSelectedIndex()];
+        switch (tabSeleccionado) {
+
+            case RESERVAS -> poblarTablaReservas();
+            case HUESPEDES -> poblarTablaHuespedes();
+        }
     }
 
     private void poblarTablaHuespedes() {
 
-        /*
-        * modeloHuesped.addColumn("Número de Huesped");
-        modeloHuesped.addColumn("Nombre");
-        modeloHuesped.addColumn("Apellido");
-        modeloHuesped.addColumn("Fecha de Nacimiento");
-        modeloHuesped.addColumn("Nacionalidad");
-        modeloHuesped.addColumn("Telefono");
-        modeloHuesped.addColumn("Número de Reserva");
-        * */
+        borrarTabla(tbHuespedes);
+        poblarListaHuespedes();
+
         for (RegistroHuesped h : huespedes)
             ((DefaultTableModel) tbHuespedes.getModel()).addRow(new String[]{
                     h.id().toString(),
@@ -286,7 +344,10 @@ public class BusquedaView extends JFrame {
                     "NO DISPONIBLE"});
     }
 
-    private void poblarTablaReservas(){
+    private void poblarTablaReservas() {
+
+        borrarTabla(tbReservas);
+        poblarListaReservas();
 
         for (RegistroReserva r : reservas)
             ((DefaultTableModel) tbReservas.getModel()).addRow(new String[]{
@@ -320,4 +381,9 @@ public class BusquedaView extends JFrame {
         int y = evt.getYOnScreen();
         this.setLocation(x - xMouse, y - yMouse);
     }
+}
+
+enum Tabla {
+    RESERVAS,
+    HUESPEDES
 }
