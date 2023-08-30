@@ -1,6 +1,7 @@
 package ar.com.facundobazan.hotel_alura.dao;
 
 import ar.com.facundobazan.hotel_alura.entities.Huesped;
+import ar.com.facundobazan.hotel_alura.entities.Usuario;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.TypedQuery;
 import jakarta.persistence.criteria.CriteriaBuilder;
@@ -25,7 +26,7 @@ public class HuespedDAO implements Crud<Huesped> {
         return this.entityManager.find(Huesped.class, id);
     }
 
-    public Huesped getByDocument(String documento){
+    public Huesped getByDocument(String documento) {
 
         String query = "SELECT H FROM Huesped H WHERE documento = :documento";
         TypedQuery<Huesped> typedQuery = this.entityManager.createQuery(query, Huesped.class);
@@ -73,5 +74,18 @@ public class HuespedDAO implements Crud<Huesped> {
 
         Huesped huesped = getOne(id);
         this.entityManager.remove(huesped);
+    }
+
+    public void getByReservaId(long id) {
+
+        /*String queryBase = "SELECT H , R" +
+                "FROM Huesped H " +
+                "INNER JOIN Reserva R " +
+                "ON R.Huesped = H " +
+                "WHERE R.id = :id";
+        TypedQuery<Huesped> query = this.entityManager.createQuery(queryBase, Huesped.class);
+        query.setParameter("id", id);
+
+        return query.getSingleResult();*/
     }
 }

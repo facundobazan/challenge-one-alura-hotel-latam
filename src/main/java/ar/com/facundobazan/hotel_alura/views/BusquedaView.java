@@ -7,15 +7,17 @@ import ar.com.facundobazan.hotel_alura.services.ReservaServicio;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ListSelectionEvent;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionAdapter;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import static java.util.Arrays.stream;
@@ -27,7 +29,7 @@ public class BusquedaView extends JFrame {
     private JTextField txtBuscar;
     private JTable tbHuespedes;
     private JTable tbReservas;
-    private DefaultTableModel modelo;
+    private DefaultTableModel modeloReserva;
     private ArrayList<RegistroReserva> reservas = new ArrayList<>();
     private ArrayList<RegistroHuesped> huespedes = new ArrayList<>();
     private DefaultTableModel modeloHuesped;
@@ -92,16 +94,15 @@ public class BusquedaView extends JFrame {
         tbReservas = new JTable();
         tbReservas.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         tbReservas.setFont(new Font("Roboto", Font.PLAIN, 16));
-        modelo = (DefaultTableModel) tbReservas.getModel();
-        modelo.addColumn("Numero de Reserva");
-        modelo.addColumn("Fecha Check In");
-        modelo.addColumn("Fecha Check Out");
-        modelo.addColumn("Valor");
-        modelo.addColumn("Forma de Pago");
+        modeloReserva = (DefaultTableModel) tbReservas.getModel();
+        modeloReserva.addColumn("Numero de Reserva");
+        modeloReserva.addColumn("Fecha Check In");
+        modeloReserva.addColumn("Fecha Check Out");
+        modeloReserva.addColumn("Valor");
+        modeloReserva.addColumn("Forma de Pago");
         JScrollPane scroll_table = new JScrollPane(tbReservas);
         panel.addTab("Reservas", new ImageIcon(BusquedaView.class.getResource("/imagenes/reservado.png")), scroll_table, null);
         scroll_table.setVisible(true);
-
 
         tbHuespedes = new JTable();
         tbHuespedes.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -249,6 +250,32 @@ public class BusquedaView extends JFrame {
         lblEditar.setFont(new Font("Roboto", Font.PLAIN, 18));
         lblEditar.setBounds(0, 0, 122, 35);
         btnEditar.add(lblEditar);
+        btnEditar.addMouseListener(new MouseListener() {
+            @Override
+            public void mouseClicked(MouseEvent mouseEvent) {
+                System.out.println(tbReservas.getValueAt(tbReservas.getSelectedRow(), tbReservas.getSelectedColumn()));
+            }
+
+            @Override
+            public void mousePressed(MouseEvent mouseEvent) {
+
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent mouseEvent) {
+
+            }
+
+            @Override
+            public void mouseEntered(MouseEvent mouseEvent) {
+
+            }
+
+            @Override
+            public void mouseExited(MouseEvent mouseEvent) {
+
+            }
+        });
 
         JPanel btnEliminar = new JPanel();
         btnEliminar.setLayout(null);
@@ -304,26 +331,6 @@ public class BusquedaView extends JFrame {
         poblarTabla();
     }
 
-    private void pruebaFiltro() {
-
-        switch (tabSeleccionado) {
-            case HUESPEDES -> {
-
-                var h = huespedes.stream().filter(huesped -> {
-                    return huesped.apellido().contains(filtroBusqueda) || huesped.nombre().contains(filtroBusqueda);
-                }).collect(Collectors.toList());
-            }
-            case RESERVAS -> {
-                System.out.println("Prueba filtro reservas");
-            }
-        }
-    }
-
-    private void filtrarCampos() {
-
-        poblarTabla();
-    }
-
     private void borrarRegistro() {
 
         switch (tabSeleccionado) {
@@ -335,8 +342,49 @@ public class BusquedaView extends JFrame {
 
     private void borrarRegistro(JTable tabla) {
 
-        int filaSeleccionada = tabla.getSelectedRow();
-        if (filaSeleccionada != -1) ((DefaultTableModel) tabla.getModel()).removeRow(filaSeleccionada);
+        if (tabla.getSelectedRow() != -1) {
+            long id;
+
+            switch (tabSeleccionado) {
+                case RESERVAS -> {
+
+                    id = Long.valueOf(tabla.getValueAt(tabla.getSelectedRow(),0).toString());
+                    int opcion = JOptionPane.showConfirmDialog(
+                            null,
+                            String.format("Estas por borrar la reserva nro=%s.\n¿Deseas continuar?", id),
+                            "Borrar reserva",
+                            JOptionPane.YES_NO_OPTION,
+                            JOptionPane.QUESTION_MESSAGE);
+
+                    if (opcion == 0) {
+
+                        try {
+
+                            ReservaServicio reservaServicio = new ReservaServicio();
+                            reservaServicio.borrarReservaAsignada(id);
+                            JOptionPane.showMessageDialog(
+                                    null,
+                                    "Operación cancelada.",
+                                    "Aviso",
+                                    JOptionPane.INFORMATION_MESSAGE);
+
+                            filtroBusqueda = "";
+                            poblarTabla();
+                        } catch (Exception e) {
+
+                            e.printStackTrace();
+                        }
+                    } else {
+                        JOptionPane.showMessageDialog(
+                                null,
+                                "Operación cancelada.",
+                                "Aviso",
+                                JOptionPane.INFORMATION_MESSAGE);
+                    }
+                }
+            }
+            //((DefaultTableModel) tabla.getModel()).removeRow(row);
+        }
     }
 
     private void borrarTabla(JTable tabla) {
@@ -428,7 +476,7 @@ public class BusquedaView extends JFrame {
     private void poblarListaReservas() {
 
         ReservaServicio reservaServicio = new ReservaServicio();
-        this.reservas = reservaServicio.obtenerReservas();
+        this.reservas = reservaServicio.obtenerReservasAsignadas();
     }
 
     private void poblarListaHuespedes() {

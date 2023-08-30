@@ -64,4 +64,10 @@ public class ReservaDAO implements Crud<Reserva> {
         Reserva reserva = getOne(id);
         this.entityManager.remove(reserva);
     }
+
+    public Object getAllAsigned() {
+
+        String query = "SELECT R FROM Reserva R INNER JOIN Huesped H ON R.huesped = H";
+        return this.entityManager.createQuery(query, Reserva.class).getResultList();
+    }
 }

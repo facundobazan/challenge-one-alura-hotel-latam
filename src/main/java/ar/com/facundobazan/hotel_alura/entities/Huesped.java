@@ -1,11 +1,13 @@
 package ar.com.facundobazan.hotel_alura.entities;
 
 import ar.com.facundobazan.hotel_alura.entities.records.RegistroHuesped;
+import ar.com.facundobazan.hotel_alura.entities.records.RegistroReserva;
 import jakarta.persistence.*;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Entity
 @Table(name = "huespedes")
@@ -120,5 +122,12 @@ public class Huesped {
 
     public String getDocumento() {
         return documento;
+    }
+
+    public void removeReserva(long id) {
+
+        List<Reserva> reserva = this.reservas.stream().filter(r -> r.getId() == id).toList();;
+        this.reservas.remove(reserva.get(0));
+
     }
 }

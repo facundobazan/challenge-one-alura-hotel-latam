@@ -1,8 +1,12 @@
 package ar.com.facundobazan.hotel_alura.services;
 
+import ar.com.facundobazan.hotel_alura.dao.HuespedDAO;
 import ar.com.facundobazan.hotel_alura.dao.ReservaDAO;
+import ar.com.facundobazan.hotel_alura.dao.UsuarioDAO;
 import ar.com.facundobazan.hotel_alura.entities.FormaPago;
+import ar.com.facundobazan.hotel_alura.entities.Huesped;
 import ar.com.facundobazan.hotel_alura.entities.Reserva;
+import ar.com.facundobazan.hotel_alura.entities.Usuario;
 import ar.com.facundobazan.hotel_alura.entities.records.RegistroPrecio;
 import ar.com.facundobazan.hotel_alura.entities.records.RegistroReserva;
 import ar.com.facundobazan.hotel_alura.utils.JPAUtil;
@@ -95,5 +99,61 @@ public class ReservaServicio {
         }
 
         return null;
+    }
+
+    public ArrayList<RegistroReserva> obtenerReservasAsignadas() {
+
+        ArrayList<RegistroReserva> registroReservas = new ArrayList<>();
+
+        try (EntityManager em = JPAUtil.getEntityManager()) {
+
+            ReservaDAO reservaDAO = new ReservaDAO(em);
+            ArrayList<Reserva> reservas = (ArrayList<Reserva>) reservaDAO.getAllAsigned();
+            for (Reserva r: reservas) registroReservas.add(convertir(r));
+
+            return registroReservas;
+        } catch (Exception e) {
+
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
+    public void borrarReserva(long id) {
+
+        try (EntityManager em = JPAUtil.getEntityManager()) {
+
+            ReservaDAO reservaDAO = new ReservaDAO(em);
+            em.getTransaction().begin();
+            reservaDAO.delete(id);
+            em.getTransaction().commit();
+        } catch (Exception e) {
+
+            e.printStackTrace();
+        }
+    }
+
+    public void borrarReservaAsignada(long id) {
+
+        try (EntityManager em = JPAUtil.getEntityManager()) {
+
+            ReservaDAO reservaDAO = new ReservaDAO(em);
+            Huesped huesped = reservaDAO.getOne(id).getHuesped();
+
+            if (huesped != null){
+
+                em.getTransaction().begin();
+                HuespedDAO huespedDAO = new HuespedDAO(em);
+                huesped.removeReserva(id);
+                huespedDAO.update(huesped);
+                em.getTransaction().commit();
+            }
+
+            System.out.println("huesped = " + huesped);
+        } catch (Exception e) {
+
+            e.printStackTrace();
+        }
     }
 }

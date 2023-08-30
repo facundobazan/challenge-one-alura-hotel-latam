@@ -17,7 +17,7 @@ public class UsuarioDAO {
         return this.entityManager.find(Usuario.class, id);
     }
 
-    public Usuario getByEmail(String email){
+    public Usuario getByEmail(String email) {
 
         String queryBase = "SELECT U FROM Usuario U WHERE email = :email";
         TypedQuery<Usuario> query = this.entityManager.createQuery(queryBase, Usuario.class);
@@ -40,6 +40,7 @@ public class UsuarioDAO {
 
         this.entityManager.persist(usuario);
     }
+
     public void update(Usuario usuario) {
 
         this.entityManager.merge(usuario);
