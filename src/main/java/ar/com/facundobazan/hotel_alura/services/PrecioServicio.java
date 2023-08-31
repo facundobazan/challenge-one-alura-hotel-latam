@@ -1,11 +1,13 @@
 package ar.com.facundobazan.hotel_alura.services;
 
 import ar.com.facundobazan.hotel_alura.dao.PreciosDAO;
+import ar.com.facundobazan.hotel_alura.entities.FormaPago;
 import ar.com.facundobazan.hotel_alura.entities.Precio;
 import ar.com.facundobazan.hotel_alura.entities.records.RegistroPrecio;
 import ar.com.facundobazan.hotel_alura.utils.JPAUtil;
 import jakarta.persistence.EntityManager;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 public class PrecioServicio {
@@ -83,5 +85,29 @@ public class PrecioServicio {
                 precio.getTasaDebito(),
                 precio.getTasaTarjeta()
         );
+    }
+
+    public double calcularPrecioFinal(LocalDate fechaEntrada, LocalDate fechaSalida, FormaPago formaPago) {
+
+        RegistroPrecio precio = obtenerUltimaActualizacion();
+
+        int diasFechaEntrada = fechaEntrada.getDayOfYear();
+        int diasFechaSalida = fechaSalida.getDayOfYear();
+        int cantidadDias = diasFechaSalida - diasFechaEntrada + 1;
+        double precioFinal = cantidadDias * precio.precioBase();
+
+        switch (formaPago) {
+            case EFECTIVO -> {
+                return precioFinal * precio.tasaEfectivo();
+            }
+            case DEBITO -> {
+                return precioFinal * precio.tasaDebito();
+            }
+            case CREDITO -> {
+                return precioFinal * precio.tasaTarjeta();
+            }
+        }
+
+        throw new RuntimeException("La operación falló");
     }
 }

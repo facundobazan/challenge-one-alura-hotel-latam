@@ -37,6 +37,15 @@ public class Reserva {
         this.formaPago = reserva.formaPago();
     }
 
+    public Reserva(LocalDate fechaEntrada, LocalDate fechaSalida, Double valor, FormaPago formaPago, Huesped huesped) {
+
+        this.fechaEntrada = fechaEntrada;
+        this.fechaSalida = fechaSalida;
+        this.valor = valor;
+        this.formaPago = formaPago;
+        this.huesped = huesped;
+    }
+
     public Reserva(Long id, LocalDate fechaEntrada, LocalDate fechaSalida, Double valor, FormaPago formaPago, Huesped huesped) {
 
         this.id = id;

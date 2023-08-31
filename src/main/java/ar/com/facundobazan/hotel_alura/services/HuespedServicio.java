@@ -5,6 +5,7 @@ import ar.com.facundobazan.hotel_alura.dao.ReservaDAO;
 import ar.com.facundobazan.hotel_alura.entities.Huesped;
 import ar.com.facundobazan.hotel_alura.entities.Reserva;
 import ar.com.facundobazan.hotel_alura.entities.records.RegistroHuesped;
+import ar.com.facundobazan.hotel_alura.entities.records.RegistroReserva;
 import ar.com.facundobazan.hotel_alura.utils.JPAUtil;
 import jakarta.persistence.EntityManager;
 
@@ -94,14 +95,15 @@ public class HuespedServicio {
 
             if (results.isEmpty()) return huespedes;
 
-            for (Huesped h:results) huespedes.add(new RegistroHuesped(
-                    h.getId(),
-                    h.getApellido(),
-                    h.getNombre(),
-                    h.getDocumento(),
-                    h.getFechaNacimiento(),
-                    h.getNacionalidad(),
-                    h.getTelefono()));
+            for (Huesped h : results)
+                huespedes.add(new RegistroHuesped(
+                        h.getId(),
+                        h.getApellido(),
+                        h.getNombre(),
+                        h.getDocumento(),
+                        h.getFechaNacimiento(),
+                        h.getNacionalidad(),
+                        h.getTelefono()));
 
         } catch (Exception e) {
 
@@ -113,13 +115,13 @@ public class HuespedServicio {
 
     public void borrarHuesped(long id) {
 
-        try(EntityManager em = JPAUtil.getEntityManager()){
+        try (EntityManager em = JPAUtil.getEntityManager()) {
 
             HuespedDAO huespedDAO = new HuespedDAO(em);
             em.getTransaction().begin();
             huespedDAO.delete(id);
             em.getTransaction().commit();
-        } catch (Exception e){
+        } catch (Exception e) {
 
             e.printStackTrace();
         }
@@ -127,13 +129,40 @@ public class HuespedServicio {
 
     public void modificarHuesped(RegistroHuesped huesped) {
 
-        try(EntityManager em = JPAUtil.getEntityManager()) {
+        try (EntityManager em = JPAUtil.getEntityManager()) {
 
             HuespedDAO huespedDAO = new HuespedDAO(em);
             em.getTransaction().begin();
             huespedDAO.update(new Huesped(huesped));
             em.getTransaction().commit();
-        } catch (Exception e){
+        } catch (Exception e) {
+
+            e.printStackTrace();
+        }
+    }
+
+    public void agregrarReserva(long id, RegistroReserva reserva) {
+
+        try (EntityManager em = JPAUtil.getEntityManager()) {
+
+            HuespedDAO huespedDAO = new HuespedDAO(em);
+            em.getTransaction().begin();
+            Huesped huesped = huespedDAO.getOne(id);
+            if (huesped == null) throw new Exception("No se encontro el usuario");
+            huesped.addReserva(new Reserva(
+                    reserva.fechaEntrada(),
+                    reserva.fechaSalida(),
+                    new PrecioServicio()
+                            .calcularPrecioFinal(
+                                    reserva.fechaEntrada(),
+                                    reserva.fechaSalida(),
+                                    reserva.formaPago()),
+                    reserva.formaPago(),
+                    huesped
+            ));
+            huespedDAO.update(huesped);
+            em.getTransaction().commit();
+        } catch (Exception e) {
 
             e.printStackTrace();
         }

@@ -112,6 +112,7 @@ public class Huesped {
 
     public void addReserva(Reserva reserva) {
 
+        reserva.setHuesped(this);
         this.reservas.add(reserva);
     }
 

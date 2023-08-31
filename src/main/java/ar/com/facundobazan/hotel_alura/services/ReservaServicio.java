@@ -79,6 +79,30 @@ public class ReservaServicio {
         throw new RuntimeException("La operación falló");
     }
 
+    public double calcularPrecioFinal(LocalDate fechaEntrada, LocalDate fechaSalida, FormaPago formaPago) {
+
+        RegistroPrecio precio = new PrecioServicio().obtenerUltimaActualizacion();
+
+        int diasFechaEntrada = fechaEntrada.getDayOfYear();
+        int diasFechaSalida = fechaSalida.getDayOfYear();
+        int cantidadDias = diasFechaSalida - diasFechaEntrada + 1;
+        double precioFinal = cantidadDias * precio.precioBase();
+
+        switch (formaPago) {
+            case EFECTIVO -> {
+                return precioFinal * precio.tasaEfectivo();
+            }
+            case DEBITO -> {
+                return precioFinal * precio.tasaDebito();
+            }
+            case CREDITO -> {
+                return precioFinal * precio.tasaTarjeta();
+            }
+        }
+
+        throw new RuntimeException("La operación falló");
+    }
+
     public ArrayList<RegistroReserva> obtenerReservas() {
 
         ArrayList<RegistroReserva> registroReservas = new ArrayList<>();
