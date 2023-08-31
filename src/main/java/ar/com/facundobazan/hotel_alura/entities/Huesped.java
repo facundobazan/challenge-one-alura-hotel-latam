@@ -27,12 +27,17 @@ public class Huesped {
     private String nacionalidad;
     private String telefono;
 
-    @OneToMany(fetch = FetchType.EAGER, orphanRemoval = true, cascade = CascadeType.ALL)
+    @OneToMany(fetch = FetchType.EAGER, orphanRemoval = false, cascade = CascadeType.ALL)
     private List<Reserva> reservas;
 
     public Huesped() {
 
         this.reservas = new ArrayList<>();
+    }
+
+    public Huesped(RegistroHuesped huesped){
+        setId(huesped.id());
+        asignarHuesped(huesped);
     }
 
     public Long getId() {

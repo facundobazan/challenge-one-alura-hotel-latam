@@ -254,7 +254,8 @@ public class BusquedaView extends JFrame {
         btnEditar.addMouseListener(new MouseListener() {
             @Override
             public void mouseClicked(MouseEvent mouseEvent) {
-                System.out.println(tbReservas.getValueAt(tbReservas.getSelectedRow(), tbReservas.getSelectedColumn()));
+                //System.out.println(tbReservas.getValueAt(tbReservas.getSelectedRow(), tbReservas.getSelectedColumn()));
+                editarRegistro();
             }
 
             @Override
@@ -327,8 +328,6 @@ public class BusquedaView extends JFrame {
         });
 
         this.filtroBusqueda = txtBuscar.getText();
-        System.out.println(txtBuscar.getText());
-        System.out.println(txtBuscar);
         poblarTabla();
     }
 
@@ -344,7 +343,8 @@ public class BusquedaView extends JFrame {
     private void borrarRegistro(JTable tabla) {
 
         if (tabla.getSelectedRow() != -1) {
-            long id = Long.valueOf(tabla.getValueAt(tabla.getSelectedRow(),0).toString());
+
+            long id = Long.valueOf(tabla.getValueAt(tabla.getSelectedRow(), 0).toString());
 
             switch (tabSeleccionado) {
                 case RESERVAS -> {
@@ -375,6 +375,7 @@ public class BusquedaView extends JFrame {
                             e.printStackTrace();
                         }
                     } else {
+
                         JOptionPane.showMessageDialog(
                                 null,
                                 "Operación cancelada.",
@@ -384,8 +385,8 @@ public class BusquedaView extends JFrame {
                 }
                 case HUESPEDES -> {
 
-                    String apellido = tabla.getValueAt(tabla.getSelectedRow(),2).toString();
-                    String nombre = tabla.getValueAt(tabla.getSelectedRow(),1).toString();
+                    String apellido = tabla.getValueAt(tabla.getSelectedRow(), 2).toString();
+                    String nombre = tabla.getValueAt(tabla.getSelectedRow(), 1).toString();
                     int opcion = JOptionPane.showConfirmDialog(
                             null,
                             String.format("¿Deseas borrar a %s , %s?\n.Se borraran también todas sus reservas asociadas.", apellido, nombre, id),
@@ -412,6 +413,7 @@ public class BusquedaView extends JFrame {
                             e.printStackTrace();
                         }
                     } else {
+
                         JOptionPane.showMessageDialog(
                                 null,
                                 "Operación cancelada.",
@@ -429,13 +431,97 @@ public class BusquedaView extends JFrame {
         ((DefaultTableModel) tabla.getModel()).getDataVector().clear();
     }
 
-    private void poblarTabla(JTable tabla) {
+    private void editarRegistro() {
 
-        switch (tabSeleccionado) {
+        int opcion = JOptionPane.showConfirmDialog(
+                null,
+                "Estas por modificar el registro seleccionado.\n¿Deseas continuar?",
+                String.format("Modificar %s", tabSeleccionado.ordinal() == 0 ? "Huésped" : "Reserva"),
+                JOptionPane.YES_NO_OPTION,
+                JOptionPane.QUESTION_MESSAGE);
 
-            case RESERVAS -> poblarTablaReservas();
-            case HUESPEDES -> poblarTablaHuespedes();
+        if (opcion == 0)
+
+            switch (tabSeleccionado) {
+                case HUESPEDES -> editarHuesped();
+                case RESERVAS -> editarReserva();
+            }
+    }
+
+    private void mostrarCancelacion() {
+
+        JOptionPane.showMessageDialog(
+                null,
+                "Operación cancelada.",
+                "Aviso",
+                JOptionPane.INFORMATION_MESSAGE);
+    }
+
+    private void editarReserva() {
+
+
+    }
+
+    private void editarHuesped() {
+
+        int row = tbHuespedes.getSelectedRow();
+        if (row != -1) {
+
+            long id = Long.valueOf(tbHuespedes.getValueAt(row, 0).toString());
+
+            RegistroHuesped huespedAux = huespedes.stream()
+                    .filter(h -> h.id() == id)
+                    .toList().get(0);
+
+            String apellidoAux = tbHuespedes.getModel().getValueAt(row, 2).toString();
+            String nombreAux = tbHuespedes.getValueAt(row, 1).toString();
+            String telefonoAux = tbHuespedes.getValueAt(row, 5).toString();
+
+            RegistroHuesped huesped = new RegistroHuesped(
+                    id,
+                    apellidoAux,
+                    nombreAux,
+                    huespedAux.documento(),
+                    huespedAux.fechaNacimiento(),
+                    huespedAux.nacionalidad(),
+                    telefonoAux);
+
+            if (apellidoAux.equals(huespedAux.apellido())
+                    && nombreAux.equals(huespedAux.nombre())
+                    && telefonoAux.equals(huespedAux.telefono())) {
+
+                JOptionPane.showMessageDialog(
+                        null,
+                        "No se encontraron modificaciones.",
+                        "Operación cancelada",
+                        JOptionPane.WARNING_MESSAGE);
+            } else {
+
+                try {
+
+                    HuespedServicio huespedServicio = new HuespedServicio();
+                    huespedServicio.modificarHuesped(huesped);
+
+                    mostrarConfirmacion();
+
+                    filtroBusqueda = "";
+                    poblarTabla();
+                } catch (Exception e) {
+
+                    mostrarCancelacion();
+                    e.printStackTrace();
+                }
+            }
         }
+    }
+
+    private void mostrarConfirmacion() {
+
+        JOptionPane.showMessageDialog(
+                null,
+                "Los cambios se efectuaron correctamente.",
+                "Aviso",
+                JOptionPane.INFORMATION_MESSAGE);
     }
 
     private void poblarTabla() {
@@ -524,11 +610,13 @@ public class BusquedaView extends JFrame {
 
     //Código que permite mover la ventana por la pantalla según la posición de "x" y "y"
     private void headerMousePressed(java.awt.event.MouseEvent evt) {
+
         xMouse = evt.getX();
         yMouse = evt.getY();
     }
 
     private void headerMouseDragged(java.awt.event.MouseEvent evt) {
+
         int x = evt.getXOnScreen();
         int y = evt.getYOnScreen();
         this.setLocation(x - xMouse, y - yMouse);
@@ -536,6 +624,7 @@ public class BusquedaView extends JFrame {
 }
 
 enum Tabla {
+
     RESERVAS,
     HUESPEDES
 }

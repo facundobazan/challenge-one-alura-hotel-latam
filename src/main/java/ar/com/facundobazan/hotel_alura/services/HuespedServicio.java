@@ -124,4 +124,18 @@ public class HuespedServicio {
             e.printStackTrace();
         }
     }
+
+    public void modificarHuesped(RegistroHuesped huesped) {
+
+        try(EntityManager em = JPAUtil.getEntityManager()) {
+
+            HuespedDAO huespedDAO = new HuespedDAO(em);
+            em.getTransaction().begin();
+            huespedDAO.update(new Huesped(huesped));
+            em.getTransaction().commit();
+        } catch (Exception e){
+
+            e.printStackTrace();
+        }
+    }
 }
