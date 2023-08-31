@@ -1,5 +1,6 @@
 package ar.com.facundobazan.hotel_alura.entities;
 
+import ar.com.facundobazan.hotel_alura.entities.records.RegistroReserva;
 import jakarta.persistence.*;
 
 import java.time.LocalDate;
@@ -25,6 +26,15 @@ public class Reserva {
     public Reserva() {
 
         this.huesped = new Huesped();
+    }
+
+    public Reserva(RegistroReserva reserva){
+
+        this.id = reserva.id();
+        this.fechaEntrada = reserva.fechaEntrada();
+        this.fechaSalida = reserva.fechaSalida();
+        this.valor = reserva.valor();
+        this.formaPago = reserva.formaPago();
     }
 
     public Reserva(Long id, LocalDate fechaEntrada, LocalDate fechaSalida, Double valor, FormaPago formaPago, Huesped huesped) {

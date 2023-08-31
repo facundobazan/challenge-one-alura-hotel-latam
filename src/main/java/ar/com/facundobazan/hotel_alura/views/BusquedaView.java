@@ -1,5 +1,6 @@
 package ar.com.facundobazan.hotel_alura.views;
 
+import ar.com.facundobazan.hotel_alura.entities.FormaPago;
 import ar.com.facundobazan.hotel_alura.entities.Huesped;
 import ar.com.facundobazan.hotel_alura.entities.records.RegistroHuesped;
 import ar.com.facundobazan.hotel_alura.entities.records.RegistroReserva;
@@ -18,6 +19,8 @@ import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionAdapter;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.text.ParseException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.stream.Collectors;
 
@@ -459,7 +462,79 @@ public class BusquedaView extends JFrame {
 
     private void editarReserva() {
 
+        int row = tbReservas.getSelectedRow();
+        if (row != -1) {
 
+            long id = Long.valueOf(tbReservas.getValueAt(row, 0).toString());
+
+            RegistroReserva reservaAux = reservas.stream()
+                    .filter(r -> r.id() == id)
+                    .toList().get(0);
+
+            String fechaEntradaStr = tbReservas.getModel().getValueAt(row, 1).toString();
+            String fechaSalidaStr = tbReservas.getValueAt(row, 2).toString();
+            String formaPagoStr = tbReservas.getValueAt(row, 4).toString();
+
+            LocalDate fechaEntrada;
+            LocalDate fechaSalida;
+            FormaPago formaPago;
+
+            try{
+
+                fechaEntrada = LocalDate.parse(fechaEntradaStr);
+                fechaSalida = LocalDate.parse(fechaSalidaStr);
+
+                if (formaPagoStr.equalsIgnoreCase(FormaPago.EFECTIVO.name()))
+                    formaPago = FormaPago.EFECTIVO;
+                else if (formaPagoStr.equalsIgnoreCase(FormaPago.CREDITO.name()))
+                    formaPago = FormaPago.CREDITO;
+                else if (formaPagoStr.equalsIgnoreCase(FormaPago.DEBITO.name()))
+                    formaPago = FormaPago.CREDITO;
+                else throw new Exception("Los valores ingresados son erroneos.");
+
+                RegistroReserva reserva = new RegistroReserva(
+                        id,
+                        fechaEntrada,
+                        fechaSalida,
+                        reservaAux.valor(),
+                        formaPago);
+
+                if (fechaEntrada.isEqual(reservaAux.fechaEntrada())
+                        && fechaSalida.isEqual(reservaAux.fechaSalida())
+                        && formaPago == reservaAux.formaPago()) {
+
+                    JOptionPane.showMessageDialog(
+                            null,
+                            "No se encontraron modificaciones.",
+                            "Operación cancelada",
+                            JOptionPane.WARNING_MESSAGE);
+                } else {
+
+                    try {
+
+                        ReservaServicio reservaServicio = new ReservaServicio();
+                        reservaServicio.modificarReserva(reserva);
+
+                        mostrarConfirmacion();
+
+                        filtroBusqueda = "";
+                        poblarTabla();
+                    } catch (Exception e) {
+
+                        mostrarCancelacion();
+                        e.printStackTrace();
+                    }
+                }
+            } catch (Exception e){
+
+                JOptionPane.showMessageDialog(
+                        null,
+                        "Ocurrio un error en la carga de los datos.\n" +
+                                "Verifica los datos ingresados",
+                        "Error",
+                        JOptionPane.ERROR_MESSAGE);
+            }
+        }
     }
 
     private void editarHuesped() {

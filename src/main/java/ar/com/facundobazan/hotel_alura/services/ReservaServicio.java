@@ -3,10 +3,7 @@ package ar.com.facundobazan.hotel_alura.services;
 import ar.com.facundobazan.hotel_alura.dao.HuespedDAO;
 import ar.com.facundobazan.hotel_alura.dao.ReservaDAO;
 import ar.com.facundobazan.hotel_alura.dao.UsuarioDAO;
-import ar.com.facundobazan.hotel_alura.entities.FormaPago;
-import ar.com.facundobazan.hotel_alura.entities.Huesped;
-import ar.com.facundobazan.hotel_alura.entities.Reserva;
-import ar.com.facundobazan.hotel_alura.entities.Usuario;
+import ar.com.facundobazan.hotel_alura.entities.*;
 import ar.com.facundobazan.hotel_alura.entities.records.RegistroPrecio;
 import ar.com.facundobazan.hotel_alura.entities.records.RegistroReserva;
 import ar.com.facundobazan.hotel_alura.utils.JPAUtil;
@@ -90,7 +87,7 @@ public class ReservaServicio {
 
             ReservaDAO reservaDAO = new ReservaDAO(em);
             ArrayList<Reserva> reservas = (ArrayList<Reserva>) reservaDAO.getAll();
-            for (Reserva r: reservas) registroReservas.add(convertir(r));
+            for (Reserva r : reservas) registroReservas.add(convertir(r));
 
             return registroReservas;
         } catch (Exception e) {
@@ -109,7 +106,7 @@ public class ReservaServicio {
 
             ReservaDAO reservaDAO = new ReservaDAO(em);
             ArrayList<Reserva> reservas = (ArrayList<Reserva>) reservaDAO.getAllAsigned();
-            for (Reserva r: reservas) registroReservas.add(convertir(r));
+            for (Reserva r : reservas) registroReservas.add(convertir(r));
 
             return registroReservas;
         } catch (Exception e) {
@@ -141,7 +138,7 @@ public class ReservaServicio {
             ReservaDAO reservaDAO = new ReservaDAO(em);
             Huesped huesped = reservaDAO.getOne(id).getHuesped();
 
-            if (huesped != null){
+            if (huesped != null) {
 
                 em.getTransaction().begin();
                 HuespedDAO huespedDAO = new HuespedDAO(em);
@@ -151,6 +148,31 @@ public class ReservaServicio {
             }
 
             System.out.println("huesped = " + huesped);
+        } catch (Exception e) {
+
+            e.printStackTrace();
+        }
+    }
+
+    public void modificarReserva(RegistroReserva reserva) {
+
+        try (EntityManager em = JPAUtil.getEntityManager()) {
+
+            ReservaDAO reservaDAO = new ReservaDAO(em);
+            PrecioServicio precioServicio = new PrecioServicio();
+            RegistroPrecio precios = precioServicio.obtenerUltimaActualizacion();
+
+            Reserva reservaAux = new Reserva(reserva);
+            reservaAux.setValor(
+                    calcularPrecioFinal(
+                            reserva.fechaEntrada(),
+                            reserva.fechaSalida(),
+                            reserva.formaPago(),
+                            precios));
+
+            em.getTransaction().begin();
+            reservaDAO.update(new Reserva(reserva));
+            em.getTransaction().commit();
         } catch (Exception e) {
 
             e.printStackTrace();
