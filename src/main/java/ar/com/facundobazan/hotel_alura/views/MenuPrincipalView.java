@@ -5,6 +5,7 @@ import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionAdapter;
 
 @SuppressWarnings("serial")
@@ -149,7 +150,7 @@ public class MenuPrincipalView extends JFrame {
 		btnLogin.add(imagenLogin);
 		imagenLogin.setHorizontalAlignment(SwingConstants.CENTER);
 		imagenLogin.setIcon(new ImageIcon(MenuPrincipalView.class.getResource("/imagenes/login.png")));
-		
+
 		JLabel lblTitulo = new JLabel("LOGIN");
 		lblTitulo.setBounds(754, 265, 83, 24);
 		lblTitulo.setBackground(SystemColor.window);
@@ -157,6 +158,39 @@ public class MenuPrincipalView extends JFrame {
 		lblTitulo.setHorizontalAlignment(SwingConstants.CENTER);
 		lblTitulo.setForeground(SystemColor.textHighlight);
 		lblTitulo.setFont(new Font("Roboto Light", Font.PLAIN, 20));
+
+		JLabel lblRegistro = new JLabel("Registrarse");
+		lblRegistro.setFont(new Font("Roboto", Font.BOLD, 16));
+		lblRegistro.setBounds(740, 380, 104, 24);
+		lblRegistro.setCursor(new Cursor(Cursor.HAND_CURSOR));
+		panel.add(lblRegistro);
+		lblRegistro.addMouseListener(new MouseListener() {
+			public void mouseClicked(MouseEvent mouseEvent) {
+				RegistroUsuarioView view = new RegistroUsuarioView();
+				view.setVisible(true);
+				dispose();
+			}
+
+			@Override
+			public void mousePressed(MouseEvent mouseEvent) {
+
+			}
+
+			@Override
+			public void mouseReleased(MouseEvent mouseEvent) {
+
+			}
+
+			@Override
+			public void mouseEntered(MouseEvent mouseEvent) {
+
+			}
+
+			@Override
+			public void mouseExited(MouseEvent mouseEvent) {
+
+			}
+		});
 	}
 	
 	//Código que permite movimentar a janela pela tela seguindo a posição de "x" e "y"	
