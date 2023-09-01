@@ -112,4 +112,26 @@ public class PrecioServicio {
 
         throw new RuntimeException("La operación falló");
     }
+
+    public double calcularPrecioFinal(LocalDate fechaEntrada, LocalDate fechaSalida, FormaPago formaPago, RecPrecio precio) {
+
+        int diasFechaEntrada = fechaEntrada.getDayOfYear();
+        int diasFechaSalida = fechaSalida.getDayOfYear();
+        int cantidadDias = diasFechaSalida - diasFechaEntrada + 1;
+        double precioFinal = cantidadDias * precio.precioBase();
+
+        switch (formaPago) {
+            case EFECTIVO -> {
+                return precioFinal * precio.tasaEfectivo();
+            }
+            case DEBITO -> {
+                return precioFinal * precio.tasaDebito();
+            }
+            case CREDITO -> {
+                return precioFinal * precio.tasaTarjeta();
+            }
+        }
+
+        throw new RuntimeException("La operación falló");
+    }
 }

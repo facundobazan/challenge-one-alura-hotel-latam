@@ -21,6 +21,7 @@ import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Date;
+import java.util.Objects;
 
 
 @SuppressWarnings("serial")
@@ -136,13 +137,13 @@ public class ReservasView extends JFrame {
         JLabel logo = new JLabel("");
         logo.setBounds(197, 68, 104, 107);
         panel_1.add(logo);
-        logo.setIcon(new ImageIcon(ReservasView.class.getResource("/imagenes/Ha-100px.png")));
+        logo.setIcon(new ImageIcon(Objects.requireNonNull(ReservasView.class.getResource("/imagenes/Ha-100px.png"))));
 
         JLabel imagenFondo = new JLabel("");
         imagenFondo.setBounds(0, 140, 500, 409);
         panel_1.add(imagenFondo);
         imagenFondo.setBackground(Color.WHITE);
-        imagenFondo.setIcon(new ImageIcon(ReservasView.class.getResource("/imagenes/reservas-img-3.png")));
+        imagenFondo.setIcon(new ImageIcon(Objects.requireNonNull(ReservasView.class.getResource("/imagenes/reservas-img-3.png"))));
 
         JLabel lblValor = new JLabel("VALOR DE LA RESERVA");
         lblValor.setForeground(SystemColor.textInactiveText);
@@ -375,9 +376,17 @@ public class ReservasView extends JFrame {
         actualizarFechaSalidaSeccionada();
         actualizarFormaPago();
 
+        double precioFinal = new PrecioServicio()
+                .calcularPrecioFinal(
+                        fechaEntradaSeleccionada,
+                        fechaSalidaSeleccionada,
+                        formaPagoSeleccionada,
+                        preciosActuales);
+/*
         ReservaServicio reservaServicio = new ReservaServicio();
         double precioFinal = new PrecioServicio()
                 .calcularPrecioFinal(fechaEntradaSeleccionada, fechaSalidaSeleccionada, formaPagoSeleccionada);
+*/
 
         txtValor.setText(String.format("$ %.2f", precioFinal));
     }
