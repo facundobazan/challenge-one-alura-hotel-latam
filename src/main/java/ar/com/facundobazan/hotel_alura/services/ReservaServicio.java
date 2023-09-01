@@ -2,13 +2,12 @@ package ar.com.facundobazan.hotel_alura.services;
 
 import ar.com.facundobazan.hotel_alura.dao.HuespedDAO;
 import ar.com.facundobazan.hotel_alura.dao.ReservaDAO;
-import ar.com.facundobazan.hotel_alura.entities.*;
+import ar.com.facundobazan.hotel_alura.entities.Huesped;
+import ar.com.facundobazan.hotel_alura.entities.Reserva;
 import ar.com.facundobazan.hotel_alura.entities.records.*;
 import ar.com.facundobazan.hotel_alura.utils.JPAUtil;
 import jakarta.persistence.EntityManager;
 
-import javax.sound.midi.Receiver;
-import java.time.LocalDate;
 import java.util.ArrayList;
 
 public class ReservaServicio {

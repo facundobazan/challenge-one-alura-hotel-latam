@@ -1,6 +1,5 @@
 package ar.com.facundobazan.hotel_alura.views;
 
-import ar.com.facundobazan.hotel_alura.entities.FormaPago;
 import ar.com.facundobazan.hotel_alura.entities.records.RecEditarReserva;
 import ar.com.facundobazan.hotel_alura.entities.records.RecHuesped;
 import ar.com.facundobazan.hotel_alura.entities.records.RecReserva;
@@ -9,20 +8,15 @@ import ar.com.facundobazan.hotel_alura.services.ReservaServicio;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
-import javax.swing.event.ChangeEvent;
-import javax.swing.table.DefaultTableColumnModel;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionAdapter;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Objects;
 import java.util.stream.Collectors;
-
-import static java.util.Arrays.stream;
 
 @SuppressWarnings("serial")
 public class BusquedaView extends JFrame {

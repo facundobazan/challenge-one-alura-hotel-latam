@@ -1,7 +1,6 @@
 package ar.com.facundobazan.hotel_alura.dao;
 
 import ar.com.facundobazan.hotel_alura.entities.Huesped;
-import ar.com.facundobazan.hotel_alura.entities.Usuario;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.TypedQuery;
 import jakarta.persistence.criteria.CriteriaBuilder;

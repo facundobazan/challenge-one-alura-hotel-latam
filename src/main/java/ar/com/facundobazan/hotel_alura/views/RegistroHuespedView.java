@@ -1,16 +1,16 @@
 package ar.com.facundobazan.hotel_alura.views;
 
 import ar.com.facundobazan.hotel_alura.entities.records.RecHuesped;
-import ar.com.facundobazan.hotel_alura.entities.records.RecNuevaReserva;
 import ar.com.facundobazan.hotel_alura.entities.records.RecNuevoHuesped;
-import ar.com.facundobazan.hotel_alura.entities.records.RecReserva;
 import ar.com.facundobazan.hotel_alura.services.HuespedServicio;
 import com.toedter.calendar.JDateChooser;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
-import java.awt.event.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseMotionAdapter;
 import java.sql.Date;
 import java.text.Format;
 import java.time.ZoneId;

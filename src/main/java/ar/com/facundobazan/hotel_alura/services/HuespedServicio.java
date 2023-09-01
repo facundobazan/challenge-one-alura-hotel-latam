@@ -10,7 +10,8 @@ import ar.com.facundobazan.hotel_alura.entities.records.RecReserva;
 import ar.com.facundobazan.hotel_alura.utils.JPAUtil;
 import jakarta.persistence.EntityManager;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.stream.Collectors;
 
 public class HuespedServicio {
