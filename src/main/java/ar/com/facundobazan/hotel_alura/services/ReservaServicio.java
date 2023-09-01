@@ -58,30 +58,6 @@ public class ReservaServicio {
         }
     }
 
-    public double calcularPrecioFinal(LocalDate fechaEntrada, LocalDate fechaSalida, FormaPago formaPago) {
-
-        RecPrecio precio = new PrecioServicio().obtenerUltimaActualizacion();
-
-        int diasFechaEntrada = fechaEntrada.getDayOfYear();
-        int diasFechaSalida = fechaSalida.getDayOfYear();
-        int cantidadDias = diasFechaSalida - diasFechaEntrada + 1;
-        double precioFinal = cantidadDias * precio.precioBase();
-
-        switch (formaPago) {
-            case EFECTIVO -> {
-                return precioFinal * precio.tasaEfectivo();
-            }
-            case DEBITO -> {
-                return precioFinal * precio.tasaDebito();
-            }
-            case CREDITO -> {
-                return precioFinal * precio.tasaTarjeta();
-            }
-        }
-
-        throw new RuntimeException("La operación falló");
-    }
-
     public ArrayList<RecReserva> obtenerReservas() {
 
         ArrayList<RecReserva> recReservas = new ArrayList<>();
@@ -179,15 +155,21 @@ public class ReservaServicio {
 
         try (EntityManager em = JPAUtil.getEntityManager()) {
 
-            final double precio = new PrecioServicio()
-                    .calcularPrecioFinal(reserva.fechaEntrada(), reserva.fechaSalida(), reserva.formaPago());
-            Reserva reservaAux = new Reserva(reserva);
-            reservaAux.setValor(precio);
-
             ReservaDAO reservaDAO = new ReservaDAO(em);
+            Reserva reservaAux = reservaDAO.getOne(reserva.id());
+
             em.getTransaction().begin();
+
+            reservaAux.setFechaEntrada(reserva.fechaEntrada());
+            reservaAux.setFechaSalida(reserva.fechaSalida());
+            reservaAux.setFormaPago(reserva.formaPago());
+            reservaAux.setValor(new PrecioServicio()
+                    .calcularPrecioFinal(reserva.fechaEntrada(), reserva.fechaSalida(), reserva.formaPago()));
+
             reservaDAO.update(reservaAux);
+
             em.getTransaction().commit();
+
         } catch (Exception e) {
 
             e.printStackTrace();

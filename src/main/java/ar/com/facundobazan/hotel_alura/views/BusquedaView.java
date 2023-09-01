@@ -357,8 +357,8 @@ public class BusquedaView extends JFrame {
 
                         try {
 
-                            ReservaServicio reservaServicio = new ReservaServicio();
-                            reservaServicio.borrarReservaAsignada(id);
+                            new HuespedServicio().cancelarReserva(id);
+                            //reservaServicio.borrarReservaAsignada(id);
                             JOptionPane.showMessageDialog(
                                     null,
                                     "Reserva cancelada.",
@@ -506,8 +506,7 @@ public class BusquedaView extends JFrame {
 
                     try {
 
-                        ReservaServicio reservaServicio = new ReservaServicio();
-                        reservaServicio.modificarReserva(reserva);
+                        new ReservaServicio().modificarReserva(reserva);
 
                         mostrarConfirmacion();
 
@@ -569,8 +568,7 @@ public class BusquedaView extends JFrame {
 
                 try {
 
-                    HuespedServicio huespedServicio = new HuespedServicio();
-                    huespedServicio.modificarHuesped(huesped);
+                    new HuespedServicio().modificar(huesped);
 
                     mostrarConfirmacion();
 

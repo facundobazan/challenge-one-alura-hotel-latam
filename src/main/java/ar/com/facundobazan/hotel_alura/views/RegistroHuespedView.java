@@ -368,8 +368,6 @@ public class RegistroHuespedView extends JFrame {
 
                 new HuespedServicio().asignarReserva(huesped.id(), nroReserva);
             }
-
-
         }
 
         JOptionPane.showConfirmDialog(null,

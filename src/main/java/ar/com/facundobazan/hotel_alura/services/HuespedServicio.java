@@ -166,20 +166,6 @@ public class HuespedServicio {
         }
     }
 
-    public void modificarHuesped(RecHuesped huesped) {
-
-        try (EntityManager em = JPAUtil.getEntityManager()) {
-
-            HuespedDAO huespedDAO = new HuespedDAO(em);
-            em.getTransaction().begin();
-            huespedDAO.update(new Huesped(huesped));
-            em.getTransaction().commit();
-        } catch (Exception e) {
-
-            e.printStackTrace();
-        }
-    }
-
     public void agregrarReserva(long id, RecReserva reserva) {
 
         try (EntityManager em = JPAUtil.getEntityManager()) {
@@ -223,7 +209,15 @@ public class HuespedServicio {
 
             em.getTransaction().begin();
 
-            huesped.addRegistroReserva(reserva);
+            huesped.addReserva(new Reserva(
+                    reserva.id(),
+                    reserva.fechaEntrada(),
+                    reserva.fechaSalida(),
+                    reserva.valor(),
+                    reserva.formaPago(),
+                    huesped
+            ));
+
             huespedDAO.update(huesped);
 
             em.getTransaction().commit();
@@ -234,52 +228,24 @@ public class HuespedServicio {
         }
     }
 
-    public void borrarReserva(long huespedId,RecReserva reserva) {
-
-        Huesped huesped = obtenerPorId(huespedId);
-        if (huesped == null) try {
-
-            throw new Exception("No se encontro el usuario");
-        } catch (Exception e) {
-
-            e.printStackTrace();
-        }
-        huesped.removeReservaById(reserva.id());
-
-        actualizar(huesped);
-    }
-
-    public void modificarReserva(RecReserva reserva) {
+    public void cancelarReserva(long reservaId) {
 
         try (EntityManager em = JPAUtil.getEntityManager()) {
 
             HuespedDAO huespedDAO = new HuespedDAO(em);
-
-            Huesped huesped = huespedDAO.getOne(reserva.id());
-
-            if (huesped == null) throw new Exception("No se pudo encontrar el usuario.");
-
-            Reserva reservaAux = huesped.getReservas().stream().filter(r -> r.getId() == reserva.id()).findFirst().orElse(null);
-
-            if (reservaAux == null) throw new Exception("No se pudo obtener la reserva.");
-
-            reservaAux.setFechaEntrada(reserva.fechaEntrada());
-            reservaAux.setFechaSalida(reserva.fechaSalida());
-            reservaAux.setFormaPago(reserva.formaPago());
-            reservaAux.setValor(new PrecioServicio()
-                    .calcularPrecioFinal(reserva.fechaEntrada(), reserva.fechaSalida(), reserva.formaPago()));
+            Huesped huesped = huespedDAO.getByReservaId(reservaId);
+            if (huesped == null) throw new Exception("No se encontro el usuario");
 
             em.getTransaction().begin();
-
-            huesped.addReserva(reservaAux);
-            huespedDAO.update(huesped);
-
+            huesped.removeReservaById(reservaId);
+            new HuespedDAO(em).update(huesped);
             em.getTransaction().commit();
 
         } catch (Exception e) {
 
             e.printStackTrace();
         }
+
     }
 
     public Huesped obtenerPorId(long id) {
@@ -298,7 +264,6 @@ public class HuespedServicio {
             em.getTransaction().begin();
 
             Huesped huespedAux = obtenerPorId(huesped.id());
-
             huespedAux.setApellido(huesped.apellido());
             huespedAux.setNombre(huesped.nombre());
             huespedAux.setTelefono(huesped.telefono());

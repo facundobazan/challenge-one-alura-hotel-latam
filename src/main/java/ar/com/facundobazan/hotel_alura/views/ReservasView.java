@@ -371,11 +371,13 @@ public class ReservasView extends JFrame {
 
     private void actualizarPrecio() {
         actualizarFechaEntradaSeccionada();
+        actualizarFechaEntradaSeccionada();
         actualizarFechaSalidaSeccionada();
         actualizarFormaPago();
 
         ReservaServicio reservaServicio = new ReservaServicio();
-        double precioFinal = reservaServicio.calcularPrecioFinal(fechaEntradaSeleccionada, fechaSalidaSeleccionada, formaPagoSeleccionada);
+        double precioFinal = new PrecioServicio()
+                .calcularPrecioFinal(fechaEntradaSeleccionada, fechaSalidaSeleccionada, formaPagoSeleccionada);
 
         txtValor.setText(String.format("$ %.2f", precioFinal));
     }

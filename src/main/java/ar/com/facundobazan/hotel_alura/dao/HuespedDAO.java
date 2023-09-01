@@ -76,16 +76,16 @@ public class HuespedDAO implements Crud<Huesped> {
         this.entityManager.remove(huesped);
     }
 
-    public void getByReservaId(long id) {
+    public Huesped getByReservaId(long reservaId) {
 
-        /*String queryBase = "SELECT H , R" +
+        String queryBase = "SELECT H " +
                 "FROM Huesped H " +
-                "INNER JOIN Reserva R " +
-                "ON R.Huesped = H " +
-                "WHERE R.id = :id";
-        TypedQuery<Huesped> query = this.entityManager.createQuery(queryBase, Huesped.class);
-        query.setParameter("id", id);
+                "JOIN H.reservas R " +
+                "WHERE R.Id = :reservaId";
 
-        return query.getSingleResult();*/
+        TypedQuery<Huesped> query = this.entityManager.createQuery(queryBase, Huesped.class);
+        query.setParameter("reservaId", reservaId);
+
+        return query.getSingleResult();
     }
 }
