@@ -217,7 +217,7 @@ public class BusquedaView extends JFrame {
             @Override
             public void mouseClicked(MouseEvent e) {
 
-                filtroBusqueda = txtBuscar.getText();
+                filtroBusqueda = txtBuscar.getText().toLowerCase();
                 poblarTabla();
                 txtBuscar.setText("");
             }
@@ -324,7 +324,7 @@ public class BusquedaView extends JFrame {
             poblarTabla();
         });
 
-        this.filtroBusqueda = txtBuscar.getText();
+        this.filtroBusqueda = txtBuscar.getText().toLowerCase();
         poblarTabla();
     }
 
@@ -630,15 +630,15 @@ public class BusquedaView extends JFrame {
     private ArrayList<RecReserva> filtrarListaReservas() {
 
         return (ArrayList<RecReserva>) reservas.stream()
-                .filter(r -> r.id().toString().toLowerCase().contains(filtroBusqueda.toLowerCase()))
+                .filter(r -> r.id().toString().toLowerCase().contains(filtroBusqueda))
                 .collect(Collectors.toList());
     }
 
     private ArrayList<RecHuesped> filtrarListaHuespedes() {
 
         return (ArrayList<RecHuesped>) huespedes.stream()
-                .filter(h -> h.apellido().toLowerCase().contains(filtroBusqueda.toLowerCase())
-                        || h.nombre().toLowerCase().contains(filtroBusqueda.toLowerCase()))
+                .filter(h -> h.apellido().toLowerCase().contains(filtroBusqueda)
+                        || h.nombre().toLowerCase().contains(filtroBusqueda))
                 .collect(Collectors.toList());
     }
 
