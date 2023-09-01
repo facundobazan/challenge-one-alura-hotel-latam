@@ -502,6 +502,8 @@ public class BusquedaView extends JFrame {
 
                 JOptionPane.showMessageDialog(null, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
             }
+            txtBuscar.setText("");
+            poblarTabla();
             /*RecReserva reservaAux = reservas.stream()
                     .filter(r -> r.id() == id)
                     .toList().get(0);

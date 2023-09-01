@@ -151,7 +151,7 @@ public class ReservaServicio {
         }
     }
 
-    public void modificarReserva(RecReserva reserva) {
+    public void modificarReserva(RecEditarReserva reserva) {
 
         try (EntityManager em = JPAUtil.getEntityManager()) {
 

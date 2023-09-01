@@ -6,6 +6,7 @@ package ar.com.facundobazan.hotel_alura.views;
 
 import ar.com.facundobazan.hotel_alura.entities.FormaPago;
 import ar.com.facundobazan.hotel_alura.entities.records.RecEditarReserva;
+import ar.com.facundobazan.hotel_alura.services.ReservaServicio;
 
 import javax.swing.*;
 import javax.swing.text.MaskFormatter;
@@ -13,6 +14,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.text.ParseException;
+import java.time.LocalDate;
 
 /**
  * @author facundo
@@ -30,7 +32,7 @@ public class EditarReservaView extends JFrame {
 
     private void cargarCampos() {
         txtFechaInicio.setValue(reserva.fechaEntrada().toString());
-        txtFechaFin.setValue(reserva.fechaEntrada().toString());
+        txtFechaFin.setValue(reserva.fechaSalida().toString());
         cboFormaPago.setSelectedItem(reserva.formaPago());
     }
 
@@ -43,7 +45,7 @@ public class EditarReservaView extends JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        try{
+        try {
             formatter = new MaskFormatter("####-##-##");
             formatter.setPlaceholderCharacter('_');
         } catch (ParseException e) {
@@ -61,7 +63,6 @@ public class EditarReservaView extends JFrame {
 
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         setTitle("Modificar reserva");
-        setAlwaysOnTop(true);
         setPreferredSize(new Dimension(250, 300));
         setBackground(new java.awt.Color(255, 255, 255));
         setUndecorated(true);
@@ -86,6 +87,22 @@ public class EditarReservaView extends JFrame {
         btnConfirmar.setFont(new java.awt.Font("Cantarell", 0, 16)); // NOI18N
         btnConfirmar.setText("Confirmar");
         btnConfirmar.setPreferredSize(new java.awt.Dimension(105, 30));
+        btnConfirmar.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+                int opcion = JOptionPane.showConfirmDialog(
+                        btnConfirmar.getParent(),
+                        "Estas por modificar el registro seleccionado.\n¿Deseas continuar?",
+                        "Advertencia",
+                        JOptionPane.YES_NO_OPTION,
+                        JOptionPane.QUESTION_MESSAGE);
+
+                if (opcion == 0) {
+                    guardarCambios();
+                    dispose();
+                } else dispose();
+            }
+        });
 
         btnCancelar.setFont(new java.awt.Font("Cantarell", 0, 16)); // NOI18N
         btnCancelar.setLabel("Cancelar");
@@ -147,6 +164,34 @@ public class EditarReservaView extends JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void guardarCambios() {
+
+        try {
+
+            new ReservaServicio().modificarReserva(new RecEditarReserva(
+                    reserva.id(),
+                    LocalDate.parse(txtFechaInicio.getValue().toString()),
+                    LocalDate.parse(txtFechaFin.getValue().toString()),
+                    FormaPago.valueOf(cboFormaPago.getSelectedItem().toString())
+            ));
+
+            JOptionPane.showMessageDialog(
+                    null,
+                    "Los cambios se efectuaron correctamente.",
+                    "Aviso",
+                    JOptionPane.INFORMATION_MESSAGE);
+        } catch (Exception e) {
+
+            JOptionPane.showMessageDialog(
+                    null,
+                    "Ocurrio un error en la carga de los datos.\n" +
+                            "Verifica los datos ingresados",
+                    "Error",
+                    JOptionPane.ERROR_MESSAGE);
+            e.printStackTrace();
+        }
+    }
 
     /**
      * @param args the command line arguments
