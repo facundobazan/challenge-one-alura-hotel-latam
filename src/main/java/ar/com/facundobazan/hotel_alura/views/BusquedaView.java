@@ -596,7 +596,7 @@ public class BusquedaView extends JFrame {
             EditarHuespedView dialog = new EditarHuespedView(this, huesped, true);
             dialog.setLocationRelativeTo(this);
             dialog.setVisible(true);
-
+            poblarTabla();
 
             /*RecHuesped huespedAux = huespedes.stream()
                     .filter(h -> h.id() == id)
