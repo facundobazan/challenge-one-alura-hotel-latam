@@ -1,6 +1,7 @@
 package ar.com.facundobazan.hotel_alura.entities;
 
-import ar.com.facundobazan.hotel_alura.entities.records.RegistroReserva;
+import ar.com.facundobazan.hotel_alura.entities.records.RecNuevaReserva;
+import ar.com.facundobazan.hotel_alura.entities.records.RecReserva;
 import jakarta.persistence.*;
 
 import java.time.LocalDate;
@@ -20,7 +21,8 @@ public class Reserva {
     @Enumerated(EnumType.STRING)
     private FormaPago formaPago;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.DETACH)
+    @ManyToOne
+    @JoinColumn(name = "huesped_id")
     private Huesped huesped;
 
     public Reserva() {
@@ -28,22 +30,21 @@ public class Reserva {
         this.huesped = new Huesped();
     }
 
-    public Reserva(RegistroReserva reserva){
+    public Reserva(RecNuevaReserva reserva, double valor) {
+
+        this.fechaEntrada = reserva.fechaEntrada();
+        this.fechaSalida = reserva.fechaSalida();
+        this.valor = valor;
+        this.formaPago = reserva.formaPago();
+    }
+
+    public Reserva(RecReserva reserva) {
 
         this.id = reserva.id();
         this.fechaEntrada = reserva.fechaEntrada();
         this.fechaSalida = reserva.fechaSalida();
         this.valor = reserva.valor();
         this.formaPago = reserva.formaPago();
-    }
-
-    public Reserva(LocalDate fechaEntrada, LocalDate fechaSalida, Double valor, FormaPago formaPago, Huesped huesped) {
-
-        this.fechaEntrada = fechaEntrada;
-        this.fechaSalida = fechaSalida;
-        this.valor = valor;
-        this.formaPago = formaPago;
-        this.huesped = huesped;
     }
 
     public Reserva(Long id, LocalDate fechaEntrada, LocalDate fechaSalida, Double valor, FormaPago formaPago, Huesped huesped) {

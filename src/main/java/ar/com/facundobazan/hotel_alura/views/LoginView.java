@@ -1,6 +1,6 @@
 package ar.com.facundobazan.hotel_alura.views;
 
-import ar.com.facundobazan.hotel_alura.entities.records.RegistroLogin;
+import ar.com.facundobazan.hotel_alura.entities.records.RecLogin;
 import ar.com.facundobazan.hotel_alura.services.AuthServicio;
 
 import javax.swing.*;
@@ -255,7 +255,7 @@ public class LoginView extends JFrame {
         } else {
 
             AuthServicio authServicio = new AuthServicio();
-            RegistroLogin login = authServicio.signIn(new RegistroLogin(null, txtUsuario.getText(), contrase));
+            RecLogin login = authServicio.signIn(new RecLogin(null, txtUsuario.getText(), contrase));
 
             if (login != null) {
                 continuar();

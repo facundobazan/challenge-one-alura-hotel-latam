@@ -2,33 +2,39 @@ package ar.com.facundobazan.hotel_alura.services;
 
 import ar.com.facundobazan.hotel_alura.dao.HuespedDAO;
 import ar.com.facundobazan.hotel_alura.dao.ReservaDAO;
-import ar.com.facundobazan.hotel_alura.dao.UsuarioDAO;
 import ar.com.facundobazan.hotel_alura.entities.*;
-import ar.com.facundobazan.hotel_alura.entities.records.RegistroPrecio;
-import ar.com.facundobazan.hotel_alura.entities.records.RegistroReserva;
+import ar.com.facundobazan.hotel_alura.entities.records.*;
 import ar.com.facundobazan.hotel_alura.utils.JPAUtil;
 import jakarta.persistence.EntityManager;
 
+import javax.sound.midi.Receiver;
 import java.time.LocalDate;
 import java.util.ArrayList;
 
 public class ReservaServicio {
 
-    public Long registrarReserva(RegistroReserva reserva) {
+    public RecReserva realizarReserva(RecNuevaReserva reserva) {
 
         try (EntityManager em = JPAUtil.getEntityManager()) {
 
-            ReservaDAO reservaDAO = new ReservaDAO(em);
-            PrecioServicio precioServicio = new PrecioServicio();
-            RegistroPrecio precio = precioServicio.obtenerUltimaActualizacion();
-            em.getTransaction().begin();
+            final double total = new PrecioServicio().calcularPrecioFinal(
+                    reserva.fechaEntrada(),
+                    reserva.fechaSalida(),
+                    reserva.formaPago());
+            Reserva nuevaReserva = new Reserva(reserva, total);
 
-            Reserva nuevaReserva = convertir(reserva);
-            double total = calcularPrecioFinal(reserva.fechaEntrada(), reserva.fechaSalida(), reserva.formaPago(), precio);
-            nuevaReserva.setValor(total);
+            ReservaDAO reservaDAO = new ReservaDAO(em);
+            em.getTransaction().begin();
             nuevaReserva.setId(reservaDAO.reservar(nuevaReserva));
             em.getTransaction().commit();
-            return nuevaReserva.getId();
+
+            return new RecReserva(
+                    nuevaReserva.getId(),
+                    nuevaReserva.getFechaEntrada(),
+                    nuevaReserva.getFechaSalida(),
+                    nuevaReserva.getValor(),
+                    nuevaReserva.getFormaPago());
+
         } catch (Exception e) {
 
             e.printStackTrace();
@@ -37,51 +43,24 @@ public class ReservaServicio {
         return null;
     }
 
-    private Reserva convertir(RegistroReserva reserva) {
-        return new Reserva(
-                reserva.id(),
-                reserva.fechaEntrada(),
-                reserva.fechaSalida(),
-                reserva.valor(),
-                reserva.formaPago(),
-                null
-        );
-    }
+    public void confirmarReserva(RecNuevoHuesped huesped, long reserva_id) {
 
-    private RegistroReserva convertir(Reserva reserva) {
-        return new RegistroReserva(
-                reserva.getId(),
-                reserva.getFechaEntrada(),
-                reserva.getFechaSalida(),
-                reserva.getValor(),
-                reserva.getFormaPago()
-        );
-    }
+        try (EntityManager em = JPAUtil.getEntityManager()) {
 
-    public double calcularPrecioFinal(LocalDate fechaEntrada, LocalDate fechaSalida, FormaPago formaPago, RegistroPrecio precio) {
-        int diasFechaEntrada = fechaEntrada.getDayOfYear();
-        int diasFechaSalida = fechaSalida.getDayOfYear();
-        int cantidadDias = diasFechaSalida - diasFechaEntrada + 1;
-        double precioFinal = cantidadDias * precio.precioBase();
 
-        switch (formaPago) {
-            case EFECTIVO -> {
-                return precioFinal * precio.tasaEfectivo();
-            }
-            case DEBITO -> {
-                return precioFinal * precio.tasaDebito();
-            }
-            case CREDITO -> {
-                return precioFinal * precio.tasaTarjeta();
-            }
+            RecReserva reservaAux = obtenerReservaPorId(reserva_id);
+            RecHuesped huespedAux = new HuespedServicio().registrarHuesped(huesped);
+
+            new HuespedServicio().agregrarReserva(huespedAux.id(), reservaAux);
+        } catch (Exception e) {
+
+            e.printStackTrace();
         }
-
-        throw new RuntimeException("La operación falló");
     }
 
     public double calcularPrecioFinal(LocalDate fechaEntrada, LocalDate fechaSalida, FormaPago formaPago) {
 
-        RegistroPrecio precio = new PrecioServicio().obtenerUltimaActualizacion();
+        RecPrecio precio = new PrecioServicio().obtenerUltimaActualizacion();
 
         int diasFechaEntrada = fechaEntrada.getDayOfYear();
         int diasFechaSalida = fechaSalida.getDayOfYear();
@@ -103,17 +82,26 @@ public class ReservaServicio {
         throw new RuntimeException("La operación falló");
     }
 
-    public ArrayList<RegistroReserva> obtenerReservas() {
+    public ArrayList<RecReserva> obtenerReservas() {
 
-        ArrayList<RegistroReserva> registroReservas = new ArrayList<>();
+        ArrayList<RecReserva> recReservas = new ArrayList<>();
 
         try (EntityManager em = JPAUtil.getEntityManager()) {
 
             ReservaDAO reservaDAO = new ReservaDAO(em);
             ArrayList<Reserva> reservas = (ArrayList<Reserva>) reservaDAO.getAll();
-            for (Reserva r : reservas) registroReservas.add(convertir(r));
 
-            return registroReservas;
+            for (Reserva r : reservas)
+                recReservas.add(
+                        new RecReserva(
+                                r.getId(),
+                                r.getFechaEntrada(),
+                                r.getFechaSalida(),
+                                r.getValor(),
+                                r.getFormaPago()));
+
+            return recReservas;
+
         } catch (Exception e) {
 
             e.printStackTrace();
@@ -122,17 +110,25 @@ public class ReservaServicio {
         return null;
     }
 
-    public ArrayList<RegistroReserva> obtenerReservasAsignadas() {
+    public ArrayList<RecReserva> obtenerReservasAsignadas() {
 
-        ArrayList<RegistroReserva> registroReservas = new ArrayList<>();
+        ArrayList<RecReserva> recReservas = new ArrayList<>();
 
         try (EntityManager em = JPAUtil.getEntityManager()) {
 
             ReservaDAO reservaDAO = new ReservaDAO(em);
             ArrayList<Reserva> reservas = (ArrayList<Reserva>) reservaDAO.getAllAsigned();
-            for (Reserva r : reservas) registroReservas.add(convertir(r));
 
-            return registroReservas;
+            for (Reserva r : reservas)
+                recReservas.add(new RecReserva(
+                        r.getId(),
+                        r.getFechaEntrada(),
+                        r.getFechaSalida(),
+                        r.getValor(),
+                        r.getFormaPago()));
+
+            return recReservas;
+
         } catch (Exception e) {
 
             e.printStackTrace();
@@ -146,9 +142,11 @@ public class ReservaServicio {
         try (EntityManager em = JPAUtil.getEntityManager()) {
 
             ReservaDAO reservaDAO = new ReservaDAO(em);
+
             em.getTransaction().begin();
             reservaDAO.delete(id);
             em.getTransaction().commit();
+
         } catch (Exception e) {
 
             e.printStackTrace();
@@ -159,14 +157,13 @@ public class ReservaServicio {
 
         try (EntityManager em = JPAUtil.getEntityManager()) {
 
-            ReservaDAO reservaDAO = new ReservaDAO(em);
-            Huesped huesped = reservaDAO.getOne(id).getHuesped();
+            Huesped huesped = new HuespedServicio().obtenerPorId(id);
 
             if (huesped != null) {
 
                 em.getTransaction().begin();
                 HuespedDAO huespedDAO = new HuespedDAO(em);
-                huesped.removeReserva(id);
+                huesped.removeReservaById(id);
                 huespedDAO.update(huesped);
                 em.getTransaction().commit();
             }
@@ -178,28 +175,44 @@ public class ReservaServicio {
         }
     }
 
-    public void modificarReserva(RegistroReserva reserva) {
+    public void modificarReserva(RecReserva reserva) {
 
         try (EntityManager em = JPAUtil.getEntityManager()) {
 
-            ReservaDAO reservaDAO = new ReservaDAO(em);
-            PrecioServicio precioServicio = new PrecioServicio();
-            RegistroPrecio precios = precioServicio.obtenerUltimaActualizacion();
-
+            final double precio = new PrecioServicio()
+                    .calcularPrecioFinal(reserva.fechaEntrada(), reserva.fechaSalida(), reserva.formaPago());
             Reserva reservaAux = new Reserva(reserva);
-            reservaAux.setValor(
-                    calcularPrecioFinal(
-                            reserva.fechaEntrada(),
-                            reserva.fechaSalida(),
-                            reserva.formaPago(),
-                            precios));
+            reservaAux.setValor(precio);
 
+            ReservaDAO reservaDAO = new ReservaDAO(em);
             em.getTransaction().begin();
-            reservaDAO.update(new Reserva(reserva));
+            reservaDAO.update(reservaAux);
             em.getTransaction().commit();
         } catch (Exception e) {
 
             e.printStackTrace();
         }
+    }
+
+    public RecReserva obtenerReservaPorId(long id) {
+
+        try (EntityManager em = JPAUtil.getEntityManager()) {
+
+            ReservaDAO reservaDAO = new ReservaDAO(em);
+            Reserva reserva = reservaDAO.getOne(id);
+
+            return new RecReserva(
+                    reserva.getId(),
+                    reserva.getFechaEntrada(),
+                    reserva.getFechaSalida(),
+                    reserva.getValor(),
+                    reserva.getFormaPago());
+
+        } catch (Exception e) {
+
+            e.printStackTrace();
+        }
+
+        return null;
     }
 }

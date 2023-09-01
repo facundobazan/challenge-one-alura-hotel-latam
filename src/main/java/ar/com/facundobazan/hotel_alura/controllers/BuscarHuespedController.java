@@ -1,7 +1,7 @@
 package ar.com.facundobazan.hotel_alura.controllers;
 
-import ar.com.facundobazan.hotel_alura.entities.records.RegistroHuesped;
-import ar.com.facundobazan.hotel_alura.entities.records.RegistroReserva;
+import ar.com.facundobazan.hotel_alura.entities.records.RecHuesped;
+import ar.com.facundobazan.hotel_alura.entities.records.RecReserva;
 import ar.com.facundobazan.hotel_alura.services.HuespedServicio;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -28,10 +28,10 @@ public class BuscarHuespedController implements Initializable {
     @FXML
     private Button btnContinuar;
 
-    private RegistroReserva reservaSeleccionada;
-    private RegistroHuesped huespedSeleccionado;
+    private RecReserva reservaSeleccionada;
+    private RecHuesped huespedSeleccionado;
 
-    public BuscarHuespedController(RegistroReserva reserva) {
+    public BuscarHuespedController(RecReserva reserva) {
 
         this.reservaSeleccionada = reserva;
     }

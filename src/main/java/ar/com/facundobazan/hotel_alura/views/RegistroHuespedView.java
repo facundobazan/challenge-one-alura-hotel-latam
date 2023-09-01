@@ -1,6 +1,9 @@
 package ar.com.facundobazan.hotel_alura.views;
 
-import ar.com.facundobazan.hotel_alura.entities.records.RegistroHuesped;
+import ar.com.facundobazan.hotel_alura.entities.records.RecHuesped;
+import ar.com.facundobazan.hotel_alura.entities.records.RecNuevaReserva;
+import ar.com.facundobazan.hotel_alura.entities.records.RecNuevoHuesped;
+import ar.com.facundobazan.hotel_alura.entities.records.RecReserva;
 import ar.com.facundobazan.hotel_alura.services.HuespedServicio;
 import com.toedter.calendar.JDateChooser;
 
@@ -28,7 +31,8 @@ public class RegistroHuespedView extends JFrame {
     int xMouse, yMouse;
     private long nroReserva;
     private static String documentoHuesped;
-    private static ar.com.facundobazan.hotel_alura.entities.records.RegistroHuesped huesped;
+    private static RecHuesped huesped;
+    private boolean esNuevoHuesped;
 
     /**
      * Launch the application.
@@ -346,16 +350,26 @@ public class RegistroHuespedView extends JFrame {
         boolean esValido = validarCampos();
         if (esValido) {
 
-            HuespedServicio huespedServicio = new HuespedServicio();
-            huespedServicio.registrarReserva(new RegistroHuesped(
-                    null,
-                    txtApellido.getText(),
-                    txtNombre.getText(),
-                    documentoHuesped,
-                    txtFechaN.getDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate(),
-                    txtNacionalidad.getSelectedItem().toString(),
-                    txtTelefono.getText()),
-                    nroReserva);
+            if (esNuevoHuesped) {
+
+
+                RecHuesped huespedAux = new HuespedServicio().registrarHuesped(
+                        new RecNuevoHuesped(
+                                txtApellido.getText(),
+                                txtNombre.getText(),
+                                documentoHuesped,
+                                txtFechaN.getDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate(),
+                                txtNacionalidad.getSelectedItem().toString(),
+                                txtTelefono.getText()));
+
+                new HuespedServicio().asignarReserva(huespedAux.id(), nroReserva);
+
+            } else {
+
+                new HuespedServicio().asignarReserva(huesped.id(), nroReserva);
+            }
+
+
         }
 
         JOptionPane.showConfirmDialog(null,
@@ -365,6 +379,7 @@ public class RegistroHuespedView extends JFrame {
                 JOptionPane.INFORMATION_MESSAGE);
 
         regresarMenu();
+
     }
 
     private boolean validarCampos() {
@@ -410,6 +425,7 @@ public class RegistroHuespedView extends JFrame {
 
     private void consultarDocumento() {
 
+        esNuevoHuesped = true;
         documentoHuesped = "";
         while (documentoHuesped.isBlank()) {
 
@@ -431,6 +447,7 @@ public class RegistroHuespedView extends JFrame {
 
         if (huesped == null) {
 
+            esNuevoHuesped = true;
             int opcion = JOptionPane.showConfirmDialog(
                     null,
                     "No se encontraron resultados.\n¿Desea continuar con el registro?",
@@ -443,6 +460,7 @@ public class RegistroHuespedView extends JFrame {
                 case JOptionPane.NO_OPTION -> cancelarReserva();
             }
         } else {
+            esNuevoHuesped = false;
             this.txtApellido.setText(huesped.apellido());
             this.txtNombre.setText(huesped.nombre());
             this.txtFechaN.setDate(Date.from(

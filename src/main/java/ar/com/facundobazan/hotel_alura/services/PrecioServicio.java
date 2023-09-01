@@ -3,7 +3,8 @@ package ar.com.facundobazan.hotel_alura.services;
 import ar.com.facundobazan.hotel_alura.dao.PreciosDAO;
 import ar.com.facundobazan.hotel_alura.entities.FormaPago;
 import ar.com.facundobazan.hotel_alura.entities.Precio;
-import ar.com.facundobazan.hotel_alura.entities.records.RegistroPrecio;
+import ar.com.facundobazan.hotel_alura.entities.records.RecNuevoPrecio;
+import ar.com.facundobazan.hotel_alura.entities.records.RecPrecio;
 import ar.com.facundobazan.hotel_alura.utils.JPAUtil;
 import jakarta.persistence.EntityManager;
 
@@ -12,7 +13,7 @@ import java.time.LocalDateTime;
 
 public class PrecioServicio {
 
-    public void ActualizarPrecios(RegistroPrecio precio) {
+    public void ActualizarPrecios(RecNuevoPrecio precio) {
 
         try (EntityManager em = JPAUtil.getEntityManager()) {
 
@@ -28,7 +29,7 @@ public class PrecioServicio {
         }
     }
 
-    public RegistroPrecio obtenerUltimaActualizacion() {
+    public RecPrecio obtenerUltimaActualizacion() {
         try (EntityManager em = JPAUtil.getEntityManager()) {
 
             PreciosDAO preciosDAO = new PreciosDAO(em);
@@ -43,7 +44,7 @@ public class PrecioServicio {
         return null;
     }
 
-    private Precio convertir(RegistroPrecio precio) {
+    private Precio convertir(RecNuevoPrecio precio) {
 
         return new Precio(
                 null,
@@ -66,9 +67,10 @@ public class PrecioServicio {
         );
     }
 
-    private RegistroPrecio convertir(Precio precio) {
+    private RecPrecio convertir(Precio precio) {
 
-        return new RegistroPrecio(
+        return new RecPrecio(
+                precio.getId(),
                 precio.getPrecioBase(),
                 precio.getHabitacionSimple(),
                 precio.getHabitacionDoble(),
@@ -89,7 +91,7 @@ public class PrecioServicio {
 
     public double calcularPrecioFinal(LocalDate fechaEntrada, LocalDate fechaSalida, FormaPago formaPago) {
 
-        RegistroPrecio precio = obtenerUltimaActualizacion();
+        RecPrecio precio = obtenerUltimaActualizacion();
 
         int diasFechaEntrada = fechaEntrada.getDayOfYear();
         int diasFechaSalida = fechaSalida.getDayOfYear();

@@ -1,8 +1,9 @@
 package ar.com.facundobazan.hotel_alura.views;
 
 import ar.com.facundobazan.hotel_alura.entities.FormaPago;
-import ar.com.facundobazan.hotel_alura.entities.records.RegistroPrecio;
-import ar.com.facundobazan.hotel_alura.entities.records.RegistroReserva;
+import ar.com.facundobazan.hotel_alura.entities.records.RecNuevaReserva;
+import ar.com.facundobazan.hotel_alura.entities.records.RecPrecio;
+import ar.com.facundobazan.hotel_alura.entities.records.RecReserva;
 import ar.com.facundobazan.hotel_alura.services.PrecioServicio;
 import ar.com.facundobazan.hotel_alura.services.ReservaServicio;
 import com.toedter.calendar.JDateChooser;
@@ -37,7 +38,7 @@ public class ReservasView extends JFrame {
     private Date fechaActual = Date.from(Instant.now());
     private LocalDate fechaEntradaSeleccionada;
     private LocalDate fechaSalidaSeleccionada;
-    private RegistroPrecio preciosActuales;
+    private RecPrecio preciosActuales;
     private FormaPago formaPagoSeleccionada = FormaPago.EFECTIVO;
 
     /**
@@ -324,15 +325,13 @@ public class ReservasView extends JFrame {
                 if (ReservasView.txtFechaEntrada.getDate() != null && ReservasView.txtFechaSalida.getDate() != null) {
 
                     ReservaServicio reservaServicio = new ReservaServicio();
-                    Long id = reservaServicio.registrarReserva(new RegistroReserva(
-                            null,
+                    RecReserva reserva = reservaServicio.realizarReserva(new RecNuevaReserva(
                             fechaEntradaSeleccionada,
-                            fechaEntradaSeleccionada,
-                            0.0,
+                            fechaSalidaSeleccionada,
                             formaPagoSeleccionada
                     ));
 
-                    RegistroHuespedView registro = new RegistroHuespedView(id);
+                    RegistroHuespedView registro = new RegistroHuespedView(reserva.id());
                     registro.setVisible(true);
                     dispose();
                 } else {
@@ -376,7 +375,7 @@ public class ReservasView extends JFrame {
         actualizarFormaPago();
 
         ReservaServicio reservaServicio = new ReservaServicio();
-        double precioFinal = reservaServicio.calcularPrecioFinal(fechaEntradaSeleccionada, fechaSalidaSeleccionada, formaPagoSeleccionada, preciosActuales);
+        double precioFinal = reservaServicio.calcularPrecioFinal(fechaEntradaSeleccionada, fechaSalidaSeleccionada, formaPagoSeleccionada);
 
         txtValor.setText(String.format("$ %.2f", precioFinal));
     }

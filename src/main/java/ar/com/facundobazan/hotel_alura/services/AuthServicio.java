@@ -2,16 +2,16 @@ package ar.com.facundobazan.hotel_alura.services;
 
 import ar.com.facundobazan.hotel_alura.dao.UsuarioDAO;
 import ar.com.facundobazan.hotel_alura.entities.Usuario;
-import ar.com.facundobazan.hotel_alura.entities.records.RegistroCambioClaveUsuario;
-import ar.com.facundobazan.hotel_alura.entities.records.RegistroLogin;
-import ar.com.facundobazan.hotel_alura.entities.records.RegistroUsuario;
+import ar.com.facundobazan.hotel_alura.entities.records.RecUsuarioCambioClave;
+import ar.com.facundobazan.hotel_alura.entities.records.RecLogin;
+import ar.com.facundobazan.hotel_alura.entities.records.RecRegistroUsuario;
 import ar.com.facundobazan.hotel_alura.utils.Argon2;
 import ar.com.facundobazan.hotel_alura.utils.JPAUtil;
 import jakarta.persistence.EntityManager;
 
 public class AuthServicio {
 
-    public Boolean RegistrarUsuario(RegistroUsuario usuario) {
+    public Boolean RegistrarUsuario(RecRegistroUsuario usuario) {
 
         if (usuario.clave().equals(usuario.reClave())) {
 
@@ -35,7 +35,7 @@ public class AuthServicio {
         } else return false;
     }
 
-    public Boolean CambiarContraseña(RegistroCambioClaveUsuario usuario) {
+    public Boolean CambiarContraseña(RecUsuarioCambioClave usuario) {
 
         if (usuario.claveNueva().equals(usuario.reClaveNueva())) {
 
@@ -60,7 +60,7 @@ public class AuthServicio {
         } else return false;
     }
 
-    public RegistroLogin signIn(RegistroLogin login) {
+    public RecLogin signIn(RecLogin login) {
 
         if (login == null || login.email().isBlank() || login.clave().isBlank()) return null;
 
@@ -70,7 +70,7 @@ public class AuthServicio {
             Usuario usuarioAux = usuarioDAO.getByEmail(login.email());
 
             if (!Argon2.verificar(usuarioAux.getClave(), login.clave())) return null;
-            return new RegistroLogin(usuarioAux.getId(), usuarioAux.getEmail(), null);
+            return new RecLogin(usuarioAux.getId(), usuarioAux.getEmail(), null);
         } catch (Exception e) {
 
             e.printStackTrace();
@@ -78,8 +78,8 @@ public class AuthServicio {
         return null;
     }
 
-    public RegistroLogin signOut(RegistroLogin login){
+    public RecLogin signOut(RecLogin login){
 
-        return new RegistroLogin(null, null, null);
+        return new RecLogin(null, null, null);
     }
 }

@@ -1,25 +1,19 @@
 package ar.com.facundobazan.hotel_alura.views;
 
 import ar.com.facundobazan.hotel_alura.entities.FormaPago;
-import ar.com.facundobazan.hotel_alura.entities.Huesped;
-import ar.com.facundobazan.hotel_alura.entities.records.RegistroHuesped;
-import ar.com.facundobazan.hotel_alura.entities.records.RegistroReserva;
+import ar.com.facundobazan.hotel_alura.entities.records.RecHuesped;
+import ar.com.facundobazan.hotel_alura.entities.records.RecReserva;
 import ar.com.facundobazan.hotel_alura.services.HuespedServicio;
 import ar.com.facundobazan.hotel_alura.services.ReservaServicio;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ListSelectionEvent;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionAdapter;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
-import java.text.ParseException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.stream.Collectors;
@@ -34,8 +28,8 @@ public class BusquedaView extends JFrame {
     private JTable tbHuespedes;
     private JTable tbReservas;
     private DefaultTableModel modeloReserva;
-    private ArrayList<RegistroReserva> reservas = new ArrayList<>();
-    private ArrayList<RegistroHuesped> huespedes = new ArrayList<>();
+    private ArrayList<RecReserva> reservas = new ArrayList<>();
+    private ArrayList<RecHuesped> huespedes = new ArrayList<>();
     private DefaultTableModel modeloHuesped;
     private JLabel labelAtras;
     private JLabel labelExit;
@@ -467,7 +461,7 @@ public class BusquedaView extends JFrame {
 
             long id = Long.valueOf(tbReservas.getValueAt(row, 0).toString());
 
-            RegistroReserva reservaAux = reservas.stream()
+            RecReserva reservaAux = reservas.stream()
                     .filter(r -> r.id() == id)
                     .toList().get(0);
 
@@ -492,7 +486,7 @@ public class BusquedaView extends JFrame {
                     formaPago = FormaPago.CREDITO;
                 else throw new Exception("Los valores ingresados son erroneos.");
 
-                RegistroReserva reserva = new RegistroReserva(
+                RecReserva reserva = new RecReserva(
                         id,
                         fechaEntrada,
                         fechaSalida,
@@ -544,7 +538,7 @@ public class BusquedaView extends JFrame {
 
             long id = Long.valueOf(tbHuespedes.getValueAt(row, 0).toString());
 
-            RegistroHuesped huespedAux = huespedes.stream()
+            RecHuesped huespedAux = huespedes.stream()
                     .filter(h -> h.id() == id)
                     .toList().get(0);
 
@@ -552,14 +546,15 @@ public class BusquedaView extends JFrame {
             String nombreAux = tbHuespedes.getValueAt(row, 1).toString();
             String telefonoAux = tbHuespedes.getValueAt(row, 5).toString();
 
-            RegistroHuesped huesped = new RegistroHuesped(
+            RecHuesped huesped = new RecHuesped(
                     id,
                     apellidoAux,
                     nombreAux,
                     huespedAux.documento(),
                     huespedAux.fechaNacimiento(),
                     huespedAux.nacionalidad(),
-                    telefonoAux);
+                    telefonoAux,
+                    new ArrayList<RecReserva>());
 
             if (apellidoAux.equals(huespedAux.apellido())
                     && nombreAux.equals(huespedAux.nombre())
@@ -612,7 +607,7 @@ public class BusquedaView extends JFrame {
     private void poblarTablaHuespedes() {
 
         borrarTabla(tbHuespedes);
-        ArrayList<RegistroHuesped> lista = new ArrayList<>();
+        ArrayList<RecHuesped> lista = new ArrayList<>();
         if (filtroBusqueda.isEmpty()) {
 
             poblarListaHuespedes();
@@ -623,7 +618,7 @@ public class BusquedaView extends JFrame {
             lista = filtrarListaHuespedes();
         }
 
-        for (RegistroHuesped h : lista)
+        for (RecHuesped h : lista)
             ((DefaultTableModel) tbHuespedes.getModel()).addRow(new String[]{
                     h.id().toString(),
                     h.nombre(),
@@ -634,16 +629,16 @@ public class BusquedaView extends JFrame {
                     "NO DISPONIBLE"});
     }
 
-    private ArrayList<RegistroReserva> filtrarListaReservas() {
+    private ArrayList<RecReserva> filtrarListaReservas() {
 
-        return (ArrayList<RegistroReserva>) reservas.stream()
+        return (ArrayList<RecReserva>) reservas.stream()
                 .filter(r -> r.id().toString().contains(filtroBusqueda))
                 .collect(Collectors.toList());
     }
 
-    private ArrayList<RegistroHuesped> filtrarListaHuespedes() {
+    private ArrayList<RecHuesped> filtrarListaHuespedes() {
 
-        return (ArrayList<RegistroHuesped>) huespedes.stream()
+        return (ArrayList<RecHuesped>) huespedes.stream()
                 .filter(h -> h.apellido().contains(filtroBusqueda) || h.nombre().contains(filtroBusqueda))
                 .collect(Collectors.toList());
     }
@@ -651,7 +646,7 @@ public class BusquedaView extends JFrame {
     private void poblarTablaReservas() {
 
         borrarTabla(tbReservas);
-        ArrayList<RegistroReserva> lista = new ArrayList<>();
+        ArrayList<RecReserva> lista = new ArrayList<>();
         if (filtroBusqueda.isEmpty()) {
 
             poblarListaReservas();
@@ -662,7 +657,7 @@ public class BusquedaView extends JFrame {
             lista = filtrarListaReservas();
         }
 
-        for (RegistroReserva r : lista)
+        for (RecReserva r : lista)
             ((DefaultTableModel) tbReservas.getModel()).addRow(new String[]{
                     r.id().toString(),
                     r.fechaEntrada().toString(),

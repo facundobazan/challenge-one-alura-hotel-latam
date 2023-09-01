@@ -4,17 +4,18 @@ import ar.com.facundobazan.hotel_alura.dao.HuespedDAO;
 import ar.com.facundobazan.hotel_alura.dao.ReservaDAO;
 import ar.com.facundobazan.hotel_alura.entities.Huesped;
 import ar.com.facundobazan.hotel_alura.entities.Reserva;
-import ar.com.facundobazan.hotel_alura.entities.records.RegistroHuesped;
-import ar.com.facundobazan.hotel_alura.entities.records.RegistroReserva;
+import ar.com.facundobazan.hotel_alura.entities.records.RecHuesped;
+import ar.com.facundobazan.hotel_alura.entities.records.RecNuevoHuesped;
+import ar.com.facundobazan.hotel_alura.entities.records.RecReserva;
 import ar.com.facundobazan.hotel_alura.utils.JPAUtil;
 import jakarta.persistence.EntityManager;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class HuespedServicio {
 
-    public RegistroHuesped buscarPorDocumento(String documento) {
+    public RecHuesped buscarPorDocumento(String documento) {
 
         if (documento.isBlank())
             throw new RuntimeException("No se puede realizar la busqueda, se recibieron valores nulos");
@@ -26,14 +27,24 @@ public class HuespedServicio {
 
             if (huesped == null) return null;
 
-            return new RegistroHuesped(
+            List<Reserva> reservaList = huesped.getReservas();
+
+            return new RecHuesped(
                     huesped.getId(),
                     huesped.getApellido(),
                     huesped.getNombre(),
                     huesped.getDocumento(),
                     huesped.getFechaNacimiento(),
                     huesped.getNacionalidad(),
-                    huesped.getTelefono()
+                    huesped.getTelefono(),
+                    huesped.getReservas().stream()
+                            .map(reserva -> new RecReserva(
+                                    reserva.getId(),
+                                    reserva.getFechaEntrada(),
+                                    reserva.getFechaSalida(),
+                                    reserva.getValor(),
+                                    reserva.getFormaPago()))
+                            .collect(Collectors.toList())
             );
         } catch (Exception e) {
 
@@ -43,7 +54,7 @@ public class HuespedServicio {
         return null;
     }
 
-    public void registrarReserva(RegistroHuesped huesped, long idReserva) {
+    public void registrarReserva(RecHuesped huesped, long idReserva) {
 
         try (EntityManager em = JPAUtil.getEntityManager()) {
 
@@ -84,33 +95,61 @@ public class HuespedServicio {
         }
     }
 
-    public ArrayList<RegistroHuesped> obtenerHuespedes() {
-
-        ArrayList<RegistroHuesped> huespedes = new ArrayList<>();
+    public ArrayList<RecHuesped> obtenerHuespedes() {
 
         try (EntityManager em = JPAUtil.getEntityManager()) {
 
             HuespedDAO huespedDAO = new HuespedDAO(em);
-            List<Huesped> results = huespedDAO.getAll();
+            List<Huesped> huespedesAux = huespedDAO.getAll();
 
-            if (results.isEmpty()) return huespedes;
+            List<RecReserva> reservas = new ArrayList<>();
+
+            List<RecHuesped> huespedes = new ArrayList<>();
+
+            huespedesAux.forEach(huesped -> {
+                huespedes.add(
+                        new RecHuesped(
+                                huesped.getId(),
+                                huesped.getApellido(),
+                                huesped.getNombre(),
+                                huesped.getDocumento(),
+                                huesped.getFechaNacimiento(),
+                                huesped.getNacionalidad(),
+                                huesped.getTelefono(),
+                                huesped.getReservas()
+                                        .stream()
+                                        .filter(r -> r.getId() == huesped.getId())
+                                        .map(r ->
+                                                new RecReserva(
+                                                        r.getId(),
+                                                        r.getFechaEntrada(),
+                                                        r.getFechaSalida(),
+                                                        r.getValor(),
+                                                        r.getFormaPago()))
+                                        .collect(Collectors.toList())));
+            });
+
+            /*if (results.isEmpty()) return huespedes;
 
             for (Huesped h : results)
-                huespedes.add(new RegistroHuesped(
+                huespedes.add(new RecHuesped(
                         h.getId(),
                         h.getApellido(),
                         h.getNombre(),
                         h.getDocumento(),
                         h.getFechaNacimiento(),
                         h.getNacionalidad(),
-                        h.getTelefono()));
+                        h.getTelefono(),
+                        reservas);*/
+
+            return (ArrayList<RecHuesped>) huespedes;
 
         } catch (Exception e) {
 
             e.printStackTrace();
         }
 
-        return huespedes;
+        return null;
     }
 
     public void borrarHuesped(long id) {
@@ -127,7 +166,7 @@ public class HuespedServicio {
         }
     }
 
-    public void modificarHuesped(RegistroHuesped huesped) {
+    public void modificarHuesped(RecHuesped huesped) {
 
         try (EntityManager em = JPAUtil.getEntityManager()) {
 
@@ -141,30 +180,192 @@ public class HuespedServicio {
         }
     }
 
-    public void agregrarReserva(long id, RegistroReserva reserva) {
+    public void agregrarReserva(long id, RecReserva reserva) {
 
         try (EntityManager em = JPAUtil.getEntityManager()) {
 
             HuespedDAO huespedDAO = new HuespedDAO(em);
             em.getTransaction().begin();
+
             Huesped huesped = huespedDAO.getOne(id);
+
             if (huesped == null) throw new Exception("No se encontro el usuario");
-            huesped.addReserva(new Reserva(
+
+            final Reserva RESERVA = new Reserva(
+                    reserva.id(),
                     reserva.fechaEntrada(),
                     reserva.fechaSalida(),
-                    new PrecioServicio()
-                            .calcularPrecioFinal(
-                                    reserva.fechaEntrada(),
-                                    reserva.fechaSalida(),
-                                    reserva.formaPago()),
+                    reserva.valor(),
                     reserva.formaPago(),
-                    huesped
-            ));
+                    huesped);
+
+            huesped.addReserva(RESERVA);
             huespedDAO.update(huesped);
+
             em.getTransaction().commit();
         } catch (Exception e) {
 
             e.printStackTrace();
         }
+    }
+
+    public void asignarReserva(long huespedId, long reservaId) {
+
+        try (EntityManager em = JPAUtil.getEntityManager()) {
+
+            HuespedDAO huespedDAO = new HuespedDAO(em);
+
+            Huesped huesped = obtenerPorId(huespedId);
+            RecReserva reserva = new ReservaServicio().obtenerReservaPorId(reservaId);
+
+            if (huesped == null) throw new Exception("No se encontro el usuario");
+            if (reserva == null) throw new Exception("No se encontro la reserva");
+
+            em.getTransaction().begin();
+
+            huesped.addRegistroReserva(reserva);
+            huespedDAO.update(huesped);
+
+            em.getTransaction().commit();
+
+        } catch (Exception e) {
+
+            e.printStackTrace();
+        }
+    }
+
+    public void borrarReserva(long huespedId,RecReserva reserva) {
+
+        Huesped huesped = obtenerPorId(huespedId);
+        if (huesped == null) try {
+
+            throw new Exception("No se encontro el usuario");
+        } catch (Exception e) {
+
+            e.printStackTrace();
+        }
+        huesped.removeReservaById(reserva.id());
+
+        actualizar(huesped);
+    }
+
+    public void modificarReserva(RecReserva reserva) {
+
+        try (EntityManager em = JPAUtil.getEntityManager()) {
+
+            HuespedDAO huespedDAO = new HuespedDAO(em);
+
+            Huesped huesped = huespedDAO.getOne(reserva.id());
+
+            if (huesped == null) throw new Exception("No se pudo encontrar el usuario.");
+
+            Reserva reservaAux = huesped.getReservas().stream().filter(r -> r.getId() == reserva.id()).findFirst().orElse(null);
+
+            if (reservaAux == null) throw new Exception("No se pudo obtener la reserva.");
+
+            reservaAux.setFechaEntrada(reserva.fechaEntrada());
+            reservaAux.setFechaSalida(reserva.fechaSalida());
+            reservaAux.setFormaPago(reserva.formaPago());
+            reservaAux.setValor(new PrecioServicio()
+                    .calcularPrecioFinal(reserva.fechaEntrada(), reserva.fechaSalida(), reserva.formaPago()));
+
+            em.getTransaction().begin();
+
+            huesped.addReserva(reservaAux);
+            huespedDAO.update(huesped);
+
+            em.getTransaction().commit();
+
+        } catch (Exception e) {
+
+            e.printStackTrace();
+        }
+    }
+
+    public Huesped obtenerPorId(long id) {
+
+        try (EntityManager em = JPAUtil.getEntityManager()) {
+
+            return new HuespedDAO(em).getOne(id);
+        }
+    }
+
+
+    public void modificar(RecHuesped huesped) {
+
+        try (EntityManager em = JPAUtil.getEntityManager()) {
+
+            em.getTransaction().begin();
+
+            Huesped huespedAux = obtenerPorId(huesped.id());
+
+            huespedAux.setApellido(huesped.apellido());
+            huespedAux.setNombre(huesped.nombre());
+            huespedAux.setTelefono(huesped.telefono());
+            huespedAux.setRegistroReservas(huesped.reservas());
+            new HuespedDAO(em).update(huespedAux);
+
+            em.getTransaction().commit();
+
+        } catch (Exception e) {
+
+            e.printStackTrace();
+        }
+    }
+
+    private void actualizar(Huesped huesped) {
+
+        final Huesped HUESPED = new Huesped(
+                huesped.getId(),
+                huesped.getApellido(),
+                huesped.getNombre(),
+                huesped.getDocumento(),
+                huesped.getFechaNacimiento(),
+                huesped.getNacionalidad(),
+                huesped.getTelefono(),
+                huesped.getReservas()
+        );
+
+        actualizar(HUESPED);
+    }
+
+    public RecHuesped registrarHuesped(RecNuevoHuesped huesped) {
+
+        try (EntityManager em = JPAUtil.getEntityManager()) {
+
+            em.getTransaction().begin();
+
+            HuespedDAO huespedDAO = new HuespedDAO(em);
+            Huesped nuevoHuesped = huespedDAO.create(new Huesped(huesped));
+
+            em.getTransaction().commit();
+
+            List<RecReserva> reservas = new ArrayList<>();
+            nuevoHuesped.getReservas().forEach(r -> {
+                        reservas.add(new RecReserva(
+                                r.getId(),
+                                r.getFechaEntrada(),
+                                r.getFechaSalida(),
+                                r.getValor(),
+                                r.getFormaPago()));
+                    }
+            );
+
+            return new RecHuesped(
+                    nuevoHuesped.getId(),
+                    nuevoHuesped.getApellido(),
+                    nuevoHuesped.getNombre(),
+                    nuevoHuesped.getDocumento(),
+                    nuevoHuesped.getFechaNacimiento(),
+                    nuevoHuesped.getNacionalidad(),
+                    nuevoHuesped.getTelefono(),
+                    reservas
+            );
+        } catch (Exception e) {
+
+            e.printStackTrace();
+        }
+
+        return null;
     }
 }

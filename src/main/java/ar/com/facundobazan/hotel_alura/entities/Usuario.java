@@ -1,6 +1,6 @@
 package ar.com.facundobazan.hotel_alura.entities;
 
-import ar.com.facundobazan.hotel_alura.entities.records.RegistroUsuario;
+import ar.com.facundobazan.hotel_alura.entities.records.RecRegistroUsuario;
 import jakarta.persistence.*;
 
 import java.time.LocalDate;
@@ -31,7 +31,7 @@ public class Usuario {
         this.fechaRegistro = fechaRegistro;
     }
 
-    public Usuario(RegistroUsuario usuario) {
+    public Usuario(RecRegistroUsuario usuario) {
 
         this.email = usuario.email();
         this.clave = usuario.clave();

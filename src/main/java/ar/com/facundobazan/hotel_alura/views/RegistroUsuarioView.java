@@ -4,7 +4,7 @@
  */
 package ar.com.facundobazan.hotel_alura.views;
 
-import ar.com.facundobazan.hotel_alura.entities.records.RegistroUsuario;
+import ar.com.facundobazan.hotel_alura.entities.records.RecRegistroUsuario;
 import ar.com.facundobazan.hotel_alura.services.AuthServicio;
 import ar.com.facundobazan.hotel_alura.utils.Regex;
 
@@ -194,7 +194,7 @@ public class RegistroUsuarioView extends JFrame {
 
         if (camposValidos) {
             AuthServicio authServicio = new AuthServicio();
-            authServicio.RegistrarUsuario(new RegistroUsuario(
+            authServicio.RegistrarUsuario(new RecRegistroUsuario(
                     txtCorreoElectronico.getText(),
                     txtClave.getText(),
                     txtReClave.getText()
