@@ -19,12 +19,13 @@ import java.time.LocalDate;
 /**
  * @author facundo
  */
-public class EditarReservaView extends JFrame {
+public class EditarReservaView extends JDialog {
 
     /**
      * Creates new form EditarReservaView
      */
-    public EditarReservaView(RecEditarReserva reserva) {
+    public EditarReservaView(Frame parent, RecEditarReserva reserva, boolean modal) {
+        super(parent, modal);
         this.reserva = reserva;
         initComponents();
         cargarCampos();
@@ -61,7 +62,7 @@ public class EditarReservaView extends JFrame {
         btnConfirmar = new JButton();
         btnCancelar = new JButton();
 
-        setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Modificar reserva");
         setPreferredSize(new Dimension(250, 300));
         setBackground(new java.awt.Color(255, 255, 255));

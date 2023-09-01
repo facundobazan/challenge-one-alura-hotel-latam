@@ -5,16 +5,13 @@
 package ar.com.facundobazan.hotel_alura.views;
 
 import ar.com.facundobazan.hotel_alura.entities.records.RecEditarHuesped;
-import ar.com.facundobazan.hotel_alura.entities.records.RecHuesped;
 import ar.com.facundobazan.hotel_alura.services.HuespedServicio;
 import ar.com.facundobazan.hotel_alura.utils.Regex;
 
 import javax.swing.*;
-import javax.swing.text.MaskFormatter;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.text.ParseException;
 
 /**
  * @author facundo
@@ -58,6 +55,7 @@ public class EditarHuespedView extends JDialog {
         btnCancelar = new JButton();
 
         setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+        setTitle("Modificar huesped");
         setBackground(new Color(254, 254, 254));
         setUndecorated(true);
         setPreferredSize(new Dimension(400, 220));

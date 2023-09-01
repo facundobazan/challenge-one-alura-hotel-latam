@@ -11,7 +11,10 @@ import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
-import java.awt.event.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionAdapter;
 import java.util.ArrayList;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -83,13 +86,6 @@ public class BusquedaView extends JFrame {
         this.panel.setFont(new Font("Roboto", Font.PLAIN, 16));
         this.panel.setBounds(20, 169, 865, 328);
         contentPane.add(this.panel);
-
-        /*DefaultTableModel modelo = new DefaultTableModel(data, columnNames) {
-            @Override
-            public boolean isCellEditable(int row, int column) {
-                return false; // Esto hace que todas las celdas sean no editables
-            }
-        };*/
 
         tbReservas = new JTable();
         tbReservas.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -239,7 +235,6 @@ public class BusquedaView extends JFrame {
         btnEditar.addMouseListener(new MouseListener() {
             @Override
             public void mouseClicked(MouseEvent mouseEvent) {
-                //System.out.println(tbReservas.getValueAt(tbReservas.getSelectedRow(), tbReservas.getSelectedColumn()));
                 editarRegistro();
             }
 
@@ -428,7 +423,6 @@ public class BusquedaView extends JFrame {
                     }
                 }
             }
-            //((DefaultTableModel) tabla.getModel()).removeRow(row);
         }
     }
 
@@ -471,15 +465,6 @@ public class BusquedaView extends JFrame {
             }
     }
 
-    private void mostrarCancelacion() {
-
-        JOptionPane.showMessageDialog(
-                null,
-                "Operación cancelada.",
-                "Aviso",
-                JOptionPane.INFORMATION_MESSAGE);
-    }
-
     private void editarReserva() {
 
         int row = tbReservas.getSelectedRow();
@@ -496,82 +481,17 @@ public class BusquedaView extends JFrame {
             try {
                 if (reserva == null) throw new Exception("Ocurrio un error al obtener la reserva.");
 
-                EditarReservaView view = new EditarReservaView(reserva);
-                view.setLocationRelativeTo(this);
-                view.setVisible(true);
+                EditarReservaView dialog = new EditarReservaView(this, reserva, true);
+                dialog.setLocationRelativeTo(this);
+                dialog.setVisible(true);
+                filtroBusqueda = "";
+                poblarTabla();
+
 
             } catch (Exception e) {
 
                 JOptionPane.showMessageDialog(null, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
             }
-            txtBuscar.setText("");
-            poblarTabla();
-            /*RecReserva reservaAux = reservas.stream()
-                    .filter(r -> r.id() == id)
-                    .toList().get(0);
-
-            String fechaEntradaStr = tbReservas.getModel().getValueAt(row, 1).toString();
-            String fechaSalidaStr = tbReservas.getValueAt(row, 2).toString();
-            String formaPagoStr = tbReservas.getValueAt(row, 4).toString();
-
-            LocalDate fechaEntrada;
-            LocalDate fechaSalida;
-            FormaPago formaPago;
-
-            try {
-
-                fechaEntrada = LocalDate.parse(fechaEntradaStr);
-                fechaSalida = LocalDate.parse(fechaSalidaStr);
-
-                if (formaPagoStr.equalsIgnoreCase(FormaPago.EFECTIVO.name()))
-                    formaPago = FormaPago.EFECTIVO;
-                else if (formaPagoStr.equalsIgnoreCase(FormaPago.CREDITO.name()))
-                    formaPago = FormaPago.CREDITO;
-                else if (formaPagoStr.equalsIgnoreCase(FormaPago.DEBITO.name()))
-                    formaPago = FormaPago.CREDITO;
-                else throw new Exception("Los valores ingresados son erroneos.");
-
-                RecReserva reserva = new RecReserva(
-                        id,
-                        fechaEntrada,
-                        fechaSalida,
-                        reservaAux.valor(),
-                        formaPago);
-
-                if (fechaEntrada.isEqual(reservaAux.fechaEntrada())
-                        && fechaSalida.isEqual(reservaAux.fechaSalida())
-                        && formaPago == reservaAux.formaPago()) {
-
-                    JOptionPane.showMessageDialog(
-                            null,
-                            "No se encontraron modificaciones.",
-                            "Operación cancelada",
-                            JOptionPane.WARNING_MESSAGE);
-                } else {
-
-                    try {
-
-                        new ReservaServicio().modificarReserva(reserva);
-
-                        mostrarConfirmacion();
-
-                        filtroBusqueda = "";
-                        poblarTabla();
-                    } catch (Exception e) {
-
-                        mostrarCancelacion();
-                        e.printStackTrace();
-                    }
-                }
-            } catch (Exception e) {
-
-                JOptionPane.showMessageDialog(
-                        null,
-                        "Ocurrio un error en la carga de los datos.\n" +
-                                "Verifica los datos ingresados",
-                        "Error",
-                        JOptionPane.ERROR_MESSAGE);
-            }*/
         }
     }
 
@@ -589,58 +509,10 @@ public class BusquedaView extends JFrame {
                     tbHuespedes.getValueAt(row, 5).toString()
             );
 
-            /*JDialog view = new  JDialog(new EditarHuespedView(this, huesped, true));
-            view.setVisible(true);*/
-
-
             EditarHuespedView dialog = new EditarHuespedView(this, huesped, true);
             dialog.setLocationRelativeTo(this);
             dialog.setVisible(true);
             poblarTabla();
-
-            /*RecHuesped huespedAux = huespedes.stream()
-                    .filter(h -> h.id() == id)
-                    .toList().get(0);
-
-            String apellidoAux = tbHuespedes.getModel().getValueAt(row, 2).toString();
-            String nombreAux = tbHuespedes.getValueAt(row, 1).toString();
-            String telefonoAux = tbHuespedes.getValueAt(row, 5).toString();
-
-            RecHuesped huesped = new RecHuesped(
-                    id,
-                    apellidoAux,
-                    nombreAux,
-                    huespedAux.documento(),
-                    huespedAux.fechaNacimiento(),
-                    huespedAux.nacionalidad(),
-                    telefonoAux,
-                    new ArrayList<RecReserva>());
-
-            if (apellidoAux.equals(huespedAux.apellido())
-                    && nombreAux.equals(huespedAux.nombre())
-                    && telefonoAux.equals(huespedAux.telefono())) {
-
-                JOptionPane.showMessageDialog(
-                        null,
-                        "No se encontraron modificaciones.",
-                        "Operación cancelada",
-                        JOptionPane.WARNING_MESSAGE);
-            } else {
-
-                try {
-
-                    new HuespedServicio().modificar(huesped);
-
-                    mostrarConfirmacion();
-
-                    filtroBusqueda = "";
-                    poblarTabla();
-                } catch (Exception e) {
-
-                    mostrarCancelacion();
-                    e.printStackTrace();
-                }
-            }*/
         }
 
     }
