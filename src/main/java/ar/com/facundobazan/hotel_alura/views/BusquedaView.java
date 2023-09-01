@@ -473,7 +473,7 @@ public class BusquedaView extends JFrame {
             LocalDate fechaSalida;
             FormaPago formaPago;
 
-            try{
+            try {
 
                 fechaEntrada = LocalDate.parse(fechaEntradaStr);
                 fechaSalida = LocalDate.parse(fechaSalidaStr);
@@ -518,7 +518,7 @@ public class BusquedaView extends JFrame {
                         e.printStackTrace();
                     }
                 }
-            } catch (Exception e){
+            } catch (Exception e) {
 
                 JOptionPane.showMessageDialog(
                         null,
@@ -630,14 +630,15 @@ public class BusquedaView extends JFrame {
     private ArrayList<RecReserva> filtrarListaReservas() {
 
         return (ArrayList<RecReserva>) reservas.stream()
-                .filter(r -> r.id().toString().contains(filtroBusqueda))
+                .filter(r -> r.id().toString().toLowerCase().contains(filtroBusqueda.toLowerCase()))
                 .collect(Collectors.toList());
     }
 
     private ArrayList<RecHuesped> filtrarListaHuespedes() {
 
         return (ArrayList<RecHuesped>) huespedes.stream()
-                .filter(h -> h.apellido().contains(filtroBusqueda) || h.nombre().contains(filtroBusqueda))
+                .filter(h -> h.apellido().toLowerCase().contains(filtroBusqueda.toLowerCase())
+                        || h.nombre().toLowerCase().contains(filtroBusqueda.toLowerCase()))
                 .collect(Collectors.toList());
     }
 
