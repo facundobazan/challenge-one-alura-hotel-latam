@@ -4,17 +4,34 @@
  */
 package ar.com.facundobazan.hotel_alura.views;
 
+import ar.com.facundobazan.hotel_alura.entities.FormaPago;
+import ar.com.facundobazan.hotel_alura.entities.records.RecEditarReserva;
+
+import javax.swing.*;
+import javax.swing.text.MaskFormatter;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.text.ParseException;
+
 /**
- *
  * @author facundo
  */
-public class EditarReservaView extends javax.swing.JFrame {
+public class EditarReservaView extends JFrame {
 
     /**
      * Creates new form EditarReservaView
      */
-    public EditarReservaView() {
+    public EditarReservaView(RecEditarReserva r) {
+        this.reserva = r;
         initComponents();
+        cargarCampos();
+    }
+
+    private void cargarCampos() {
+        txtFechaInicio.setValue(reserva.fechaEntrada().toString());
+        txtFechaFin.setValue(reserva.fechaEntrada().toString());
+        cboFormaPago.setSelectedItem(reserva.formaPago());
     }
 
     /**
@@ -26,19 +43,27 @@ public class EditarReservaView extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        lblFechaInicial = new javax.swing.JLabel();
-        txtFechaInicio = new javax.swing.JFormattedTextField();
-        lblFechaFinal = new javax.swing.JLabel();
-        txtFechaFin = new javax.swing.JFormattedTextField();
-        lblFormaPago = new javax.swing.JLabel();
-        cboFormaPago = new javax.swing.JComboBox<>();
-        btnConfirmar = new javax.swing.JButton();
-        btnCancelar = new javax.swing.JButton();
+        try{
+            formatter = new MaskFormatter("####-##-##");
+            formatter.setPlaceholderCharacter('_');
+        } catch (ParseException e) {
+            throw new RuntimeException(e);
+        }
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        lblFechaInicial = new JLabel();
+        txtFechaInicio = new JFormattedTextField(formatter);
+        lblFechaFinal = new JLabel();
+        txtFechaFin = new JFormattedTextField(formatter);
+        lblFormaPago = new JLabel();
+        cboFormaPago = new JComboBox<>();
+        btnConfirmar = new JButton();
+        btnCancelar = new JButton();
+
+        setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         setTitle("Modificar reserva");
         setAlwaysOnTop(true);
-        setBackground(new java.awt.Color(254, 254, 254));
+        setPreferredSize(new Dimension(250, 300));
+        setBackground(new java.awt.Color(255, 255, 255));
         setUndecorated(true);
         setResizable(false);
 
@@ -56,58 +81,64 @@ public class EditarReservaView extends javax.swing.JFrame {
         lblFormaPago.setText("Metodo de pago");
 
         cboFormaPago.setFont(new java.awt.Font("Cantarell", 0, 16)); // NOI18N
-        cboFormaPago.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        cboFormaPago.setModel(new DefaultComboBoxModel<>(FormaPago.values()));
 
         btnConfirmar.setFont(new java.awt.Font("Cantarell", 0, 16)); // NOI18N
         btnConfirmar.setText("Confirmar");
-        btnConfirmar.setPreferredSize(new java.awt.Dimension(90, 30));
+        btnConfirmar.setPreferredSize(new java.awt.Dimension(105, 30));
 
         btnCancelar.setFont(new java.awt.Font("Cantarell", 0, 16)); // NOI18N
         btnCancelar.setLabel("Cancelar");
-        btnCancelar.setPreferredSize(new java.awt.Dimension(90, 30));
+        btnCancelar.setPreferredSize(new java.awt.Dimension(105, 30));
+        btnCancelar.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+                dispose();
+            }
+        });
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
+        GroupLayout layout = new GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(txtFechaInicio)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(lblFechaInicial)
-                            .addComponent(lblFechaFinal)
-                            .addComponent(lblFormaPago))
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addComponent(btnCancelar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(btnConfirmar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(txtFechaFin)
-                    .addComponent(cboFormaPago, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap())
+                layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                        .addGroup(layout.createSequentialGroup()
+                                .addContainerGap()
+                                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                                        .addComponent(txtFechaInicio)
+                                        .addGroup(layout.createSequentialGroup()
+                                                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                                                        .addComponent(lblFechaInicial)
+                                                        .addComponent(lblFechaFinal)
+                                                        .addComponent(lblFormaPago))
+                                                .addGap(0, 0, Short.MAX_VALUE))
+                                        .addGroup(GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                                .addComponent(btnCancelar, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                                .addComponent(btnConfirmar, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+                                        .addComponent(txtFechaFin)
+                                        .addComponent(cboFormaPago, 0, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                .addContainerGap())
         );
         layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(lblFechaInicial)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(txtFechaInicio, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(lblFechaFinal)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(txtFechaFin, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(lblFormaPago)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(cboFormaPago, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 45, Short.MAX_VALUE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnConfirmar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnCancelar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap())
+                layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                        .addGroup(layout.createSequentialGroup()
+                                .addContainerGap()
+                                .addComponent(lblFechaInicial)
+                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(txtFechaInicio, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(lblFechaFinal)
+                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(txtFechaFin, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(lblFormaPago)
+                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(cboFormaPago, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, 45, Short.MAX_VALUE)
+                                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                                        .addComponent(btnConfirmar, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(btnCancelar, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+                                .addContainerGap())
         );
 
         lblFechaInicial.getAccessibleContext().setAccessibleName("Fecha de ingreso");
@@ -121,45 +152,25 @@ public class EditarReservaView extends javax.swing.JFrame {
      * @param args the command line arguments
      */
     public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(EditarReservaView.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(EditarReservaView.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(EditarReservaView.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(EditarReservaView.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new EditarReservaView().setVisible(true);
+                new EditarReservaView(reserva).setVisible(true);
             }
         });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btnCancelar;
-    private javax.swing.JButton btnConfirmar;
-    private javax.swing.JComboBox<String> cboFormaPago;
-    private javax.swing.JLabel lblFechaFinal;
-    private javax.swing.JLabel lblFechaInicial;
-    private javax.swing.JLabel lblFormaPago;
-    private javax.swing.JFormattedTextField txtFechaFin;
-    private javax.swing.JFormattedTextField txtFechaInicio;
+    private JButton btnCancelar;
+    private JButton btnConfirmar;
+    private JComboBox<FormaPago> cboFormaPago;
+    private JLabel lblFechaFinal;
+    private JLabel lblFechaInicial;
+    private JLabel lblFormaPago;
+    private JFormattedTextField txtFechaFin;
+    private JFormattedTextField txtFechaInicio;
+    private static RecEditarReserva reserva;
+    private MaskFormatter formatter;
     // End of variables declaration//GEN-END:variables
 }

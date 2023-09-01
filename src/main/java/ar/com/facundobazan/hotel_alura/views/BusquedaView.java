@@ -1,6 +1,7 @@
 package ar.com.facundobazan.hotel_alura.views;
 
 import ar.com.facundobazan.hotel_alura.entities.FormaPago;
+import ar.com.facundobazan.hotel_alura.entities.records.RecEditarReserva;
 import ar.com.facundobazan.hotel_alura.entities.records.RecHuesped;
 import ar.com.facundobazan.hotel_alura.entities.records.RecReserva;
 import ar.com.facundobazan.hotel_alura.services.HuespedServicio;
@@ -16,6 +17,7 @@ import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionAdapter;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 import static java.util.Arrays.stream;
@@ -99,7 +101,7 @@ public class BusquedaView extends JFrame {
         modeloReserva.addColumn("Valor");
         modeloReserva.addColumn("Forma de Pago");
         JScrollPane scroll_table = new JScrollPane(tbReservas);
-        panel.addTab("Reservas", new ImageIcon(BusquedaView.class.getResource("/imagenes/reservado.png")), scroll_table, null);
+        panel.addTab("Reservas", new ImageIcon(Objects.requireNonNull(BusquedaView.class.getResource("/imagenes/reservado.png"))), scroll_table, null);
         scroll_table.setVisible(true);
 
         tbHuespedes = new JTable();
@@ -114,31 +116,15 @@ public class BusquedaView extends JFrame {
         modeloHuesped.addColumn("Telefono");
         modeloHuesped.addColumn("Número de Reserva");
         JScrollPane scroll_tableHuespedes = new JScrollPane(tbHuespedes);
-        panel.addTab("Huéspedes", new ImageIcon(BusquedaView.class.getResource("/imagenes/pessoas.png")), scroll_tableHuespedes, null);
+        panel.addTab("Huéspedes", new ImageIcon(Objects.requireNonNull(BusquedaView.class.getResource("/imagenes/pessoas.png"))), scroll_tableHuespedes, null);
         scroll_tableHuespedes.setVisible(true);
 
         JLabel lblNewLabel_2 = new JLabel("");
-        lblNewLabel_2.setIcon(new ImageIcon(BusquedaView.class.getResource("/imagenes/Ha-100px.png")));
+        lblNewLabel_2.setIcon(new ImageIcon(Objects.requireNonNull(BusquedaView.class.getResource("/imagenes/Ha-100px.png"))));
         lblNewLabel_2.setBounds(56, 51, 104, 107);
         contentPane.add(lblNewLabel_2);
 
-        JPanel header = new JPanel();
-        header.addMouseMotionListener(new MouseMotionAdapter() {
-            @Override
-            public void mouseDragged(MouseEvent e) {
-                headerMouseDragged(e);
-
-            }
-        });
-        header.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mousePressed(MouseEvent e) {
-                headerMousePressed(e);
-            }
-        });
-        header.setLayout(null);
-        header.setBackground(Color.WHITE);
-        header.setBounds(0, 0, 910, 36);
+        JPanel header = getjPanel();
         contentPane.add(header);
 
         JPanel btnAtras = new JPanel();
@@ -328,6 +314,27 @@ public class BusquedaView extends JFrame {
         poblarTabla();
     }
 
+    private JPanel getjPanel() {
+        JPanel header = new JPanel();
+        header.addMouseMotionListener(new MouseMotionAdapter() {
+            @Override
+            public void mouseDragged(MouseEvent e) {
+                headerMouseDragged(e);
+
+            }
+        });
+        header.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e) {
+                headerMousePressed(e);
+            }
+        });
+        header.setLayout(null);
+        header.setBackground(Color.WHITE);
+        header.setBounds(0, 0, 910, 36);
+        return header;
+    }
+
     private void borrarRegistro() {
 
         switch (tabSeleccionado) {
@@ -341,7 +348,7 @@ public class BusquedaView extends JFrame {
 
         if (tabla.getSelectedRow() != -1) {
 
-            long id = Long.valueOf(tabla.getValueAt(tabla.getSelectedRow(), 0).toString());
+            long id = Long.parseLong(tabla.getValueAt(tabla.getSelectedRow(), 0).toString());
 
             switch (tabSeleccionado) {
                 case RESERVAS -> {
@@ -423,6 +430,23 @@ public class BusquedaView extends JFrame {
         }
     }
 
+    private Object[][] generarArrayReserva() {
+        poblarListaReservas();
+
+        Object[][] arrayReserva = new Object[reservas.size()][4];
+
+        int i = 0;
+        for (RecReserva r : reservas) {
+            arrayReserva[i][0] = r.id();
+            arrayReserva[i][1] = r.fechaEntrada();
+            arrayReserva[i][2] = r.fechaSalida();
+            arrayReserva[i][3] = r.formaPago().name();
+            i++;
+        }
+
+        return arrayReserva;
+    }
+
     private void borrarTabla(JTable tabla) {
 
         ((DefaultTableModel) tabla.getModel()).getDataVector().clear();
@@ -459,9 +483,26 @@ public class BusquedaView extends JFrame {
         int row = tbReservas.getSelectedRow();
         if (row != -1) {
 
-            long id = Long.valueOf(tbReservas.getValueAt(row, 0).toString());
+            long id = Long.parseLong(tbReservas.getValueAt(row, 0).toString());
 
-            RecReserva reservaAux = reservas.stream()
+            RecEditarReserva reserva = reservas.stream()
+                    .filter(r -> r.id() == id)
+                    .map(r -> new RecEditarReserva(r.id(), r.fechaEntrada(), r.fechaSalida(), r.formaPago()))
+                    .findAny()
+                    .orElse(null);
+
+            try {
+                if (reserva == null) throw new Exception("Ocurrio un error al obtener la reserva.");
+
+                EditarReservaView view = new EditarReservaView(reserva);
+                view.setLocationRelativeTo(this);
+                view.setVisible(true);
+
+            } catch (Exception e) {
+
+                JOptionPane.showMessageDialog(null, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            }
+            /*RecReserva reservaAux = reservas.stream()
                     .filter(r -> r.id() == id)
                     .toList().get(0);
 
@@ -526,7 +567,7 @@ public class BusquedaView extends JFrame {
                                 "Verifica los datos ingresados",
                         "Error",
                         JOptionPane.ERROR_MESSAGE);
-            }
+            }*/
         }
     }
 
@@ -535,7 +576,7 @@ public class BusquedaView extends JFrame {
         int row = tbHuespedes.getSelectedRow();
         if (row != -1) {
 
-            long id = Long.valueOf(tbHuespedes.getValueAt(row, 0).toString());
+            long id = Long.parseLong(tbHuespedes.getValueAt(row, 0).toString());
 
             RecHuesped huespedAux = huespedes.stream()
                     .filter(h -> h.id() == id)
