@@ -1,5 +1,6 @@
 package ar.com.facundobazan.hotel_alura.views;
 
+import ar.com.facundobazan.hotel_alura.entities.records.RecEditarHuesped;
 import ar.com.facundobazan.hotel_alura.entities.records.RecEditarReserva;
 import ar.com.facundobazan.hotel_alura.entities.records.RecHuesped;
 import ar.com.facundobazan.hotel_alura.entities.records.RecReserva;
@@ -10,10 +11,7 @@ import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.awt.event.MouseMotionAdapter;
+import java.awt.event.*;
 import java.util.ArrayList;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -584,7 +582,23 @@ public class BusquedaView extends JFrame {
 
             long id = Long.parseLong(tbHuespedes.getValueAt(row, 0).toString());
 
-            RecHuesped huespedAux = huespedes.stream()
+            RecEditarHuesped huesped = new RecEditarHuesped(
+                    id,
+                    tbHuespedes.getValueAt(row, 2).toString(),
+                    tbHuespedes.getValueAt(row, 1).toString(),
+                    tbHuespedes.getValueAt(row, 5).toString()
+            );
+
+            /*JDialog view = new  JDialog(new EditarHuespedView(this, huesped, true));
+            view.setVisible(true);*/
+
+
+            EditarHuespedView dialog = new EditarHuespedView(this, huesped, true);
+            dialog.setLocationRelativeTo(this);
+            dialog.setVisible(true);
+
+
+            /*RecHuesped huespedAux = huespedes.stream()
                     .filter(h -> h.id() == id)
                     .toList().get(0);
 
@@ -626,8 +640,9 @@ public class BusquedaView extends JFrame {
                     mostrarCancelacion();
                     e.printStackTrace();
                 }
-            }
+            }*/
         }
+
     }
 
     private void mostrarConfirmacion() {

@@ -4,6 +4,7 @@ import ar.com.facundobazan.hotel_alura.dao.HuespedDAO;
 import ar.com.facundobazan.hotel_alura.dao.ReservaDAO;
 import ar.com.facundobazan.hotel_alura.entities.Huesped;
 import ar.com.facundobazan.hotel_alura.entities.Reserva;
+import ar.com.facundobazan.hotel_alura.entities.records.RecEditarHuesped;
 import ar.com.facundobazan.hotel_alura.entities.records.RecHuesped;
 import ar.com.facundobazan.hotel_alura.entities.records.RecNuevoHuesped;
 import ar.com.facundobazan.hotel_alura.entities.records.RecReserva;
@@ -269,6 +270,26 @@ public class HuespedServicio {
             huespedAux.setNombre(huesped.nombre());
             huespedAux.setTelefono(huesped.telefono());
             huespedAux.setRegistroReservas(huesped.reservas());
+            new HuespedDAO(em).update(huespedAux);
+
+            em.getTransaction().commit();
+
+        } catch (Exception e) {
+
+            e.printStackTrace();
+        }
+    }
+
+    public void modificar(RecEditarHuesped huesped) {
+
+        try (EntityManager em = JPAUtil.getEntityManager()) {
+
+            em.getTransaction().begin();
+
+            Huesped huespedAux = obtenerPorId(huesped.id());
+            huespedAux.setApellido(huesped.apellido());
+            huespedAux.setNombre(huesped.nombre());
+            huespedAux.setTelefono(huesped.telefono());
             new HuespedDAO(em).update(huespedAux);
 
             em.getTransaction().commit();

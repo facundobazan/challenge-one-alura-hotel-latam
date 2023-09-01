@@ -24,8 +24,8 @@ public class EditarReservaView extends JFrame {
     /**
      * Creates new form EditarReservaView
      */
-    public EditarReservaView(RecEditarReserva r) {
-        this.reserva = r;
+    public EditarReservaView(RecEditarReserva reserva) {
+        this.reserva = reserva;
         initComponents();
         cargarCampos();
     }
@@ -193,19 +193,6 @@ public class EditarReservaView extends JFrame {
         }
     }
 
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new EditarReservaView(reserva).setVisible(true);
-            }
-        });
-    }
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private JButton btnCancelar;
     private JButton btnConfirmar;
@@ -215,7 +202,7 @@ public class EditarReservaView extends JFrame {
     private JLabel lblFormaPago;
     private JFormattedTextField txtFechaFin;
     private JFormattedTextField txtFechaInicio;
-    private static RecEditarReserva reserva;
+    private RecEditarReserva reserva;
     private MaskFormatter formatter;
     // End of variables declaration//GEN-END:variables
 }

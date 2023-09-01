@@ -57,4 +57,14 @@ public class Regex {
         String regex = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$";
         return cadena.matches(regex);
     }
+
+    public static boolean validarDatosNumericos(String cadena){
+        String regex = "^[0-9]$";
+        return cadena.matches(regex);
+    }
+
+    public static boolean validarDatosString(String cadena){
+        String regex = "^[a-zA-Z]$";
+        return cadena.matches(regex);
+    }
 }
