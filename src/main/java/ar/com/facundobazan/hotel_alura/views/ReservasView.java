@@ -106,13 +106,13 @@ public class ReservasView extends JFrame {
 
         JLabel lblCheckIn = new JLabel("FECHA DE CHECK IN");
         lblCheckIn.setForeground(SystemColor.textInactiveText);
-        lblCheckIn.setBounds(68, 136, 169, 14);
+        lblCheckIn.setBounds(68, 136, 186, 14);
         lblCheckIn.setFont(new Font("Roboto Black", Font.PLAIN, 18));
         panel.add(lblCheckIn);
 
         JLabel lblCheckOut = new JLabel("FECHA DE CHECK OUT");
         lblCheckOut.setForeground(SystemColor.textInactiveText);
-        lblCheckOut.setBounds(68, 221, 187, 14);
+        lblCheckOut.setBounds(68, 221, 206, 14);
         lblCheckOut.setFont(new Font("Roboto Black", Font.PLAIN, 18));
         panel.add(lblCheckOut);
 
@@ -123,7 +123,7 @@ public class ReservasView extends JFrame {
         panel.add(lblFormaPago);
 
         JLabel lblTitulo = new JLabel("SISTEMA DE RESERVAS");
-        lblTitulo.setBounds(109, 60, 219, 42);
+        lblTitulo.setBounds(75, 60, 259, 42);
         lblTitulo.setForeground(new Color(12, 138, 199));
         lblTitulo.setFont(new Font("Roboto", Font.BOLD, 20));
         panel.add(lblTitulo);
@@ -147,7 +147,7 @@ public class ReservasView extends JFrame {
 
         JLabel lblValor = new JLabel("VALOR DE LA RESERVA");
         lblValor.setForeground(SystemColor.textInactiveText);
-        lblValor.setBounds(72, 303, 196, 14);
+        lblValor.setBounds(72, 303, 210, 14);
         lblValor.setFont(new Font("Roboto Black", Font.PLAIN, 18));
         panel.add(lblValor);
 
