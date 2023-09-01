@@ -9,6 +9,8 @@ import ar.com.facundobazan.hotel_alura.services.ReservaServicio;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
+import javax.swing.event.ChangeEvent;
+import javax.swing.table.DefaultTableColumnModel;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
@@ -90,6 +92,12 @@ public class BusquedaView extends JFrame {
         this.panel.setBounds(20, 169, 865, 328);
         contentPane.add(this.panel);
 
+        /*DefaultTableModel modelo = new DefaultTableModel(data, columnNames) {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false; // Esto hace que todas las celdas sean no editables
+            }
+        };*/
 
         tbReservas = new JTable();
         tbReservas.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -101,6 +109,7 @@ public class BusquedaView extends JFrame {
         modeloReserva.addColumn("Valor");
         modeloReserva.addColumn("Forma de Pago");
         JScrollPane scroll_table = new JScrollPane(tbReservas);
+        tbReservas.setDefaultEditor(Object.class, null);
         panel.addTab("Reservas", new ImageIcon(Objects.requireNonNull(BusquedaView.class.getResource("/imagenes/reservado.png"))), scroll_table, null);
         scroll_table.setVisible(true);
 
@@ -116,6 +125,7 @@ public class BusquedaView extends JFrame {
         modeloHuesped.addColumn("Telefono");
         modeloHuesped.addColumn("Número de Reserva");
         JScrollPane scroll_tableHuespedes = new JScrollPane(tbHuespedes);
+        tbHuespedes.setDefaultEditor(Object.class, null);
         panel.addTab("Huéspedes", new ImageIcon(Objects.requireNonNull(BusquedaView.class.getResource("/imagenes/pessoas.png"))), scroll_tableHuespedes, null);
         scroll_tableHuespedes.setVisible(true);
 
