@@ -1,0 +1,32 @@
+<!--
+    REEMPLAZAR ARCHIVO COMO 'persistence.xml', EL MISMO DEJARA DE PUBLICARSE EN GITHUB, SE ENCUENTRA EXCLUIDO EN EL
+    ARCHIVO .gitignore
+-->
+
+<?xml version="1.0" encoding="UTF-8" ?>
+<persistence xmlns="https://jakarta.ee/xml/ns/persistence"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xsi:schemaLocation="https://jakarta.ee/xml/ns/persistence
+             https://jakarta.ee/xml/ns/persistence/persistence_3_0.xsd"
+             version="3.0">
+
+    <persistence-unit name="mysql" transaction-type="RESOURCE_LOCAL">
+        <properties>
+            <!--    REEMPLAZAR EL DRIVER DE DB UTILIZADO  -->
+            <property name="jakarta.persistence.jdbc.driver" value="com.mysql.cj.jdbc.Driver"/>
+            <!--    REEMPLAZAR USUARIO_DB POR EL USUARIO DE LA BASE DE DATOS UTILIZADA  -->
+            <property name="jakarta.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/hotel_alura"/>
+            <!--    REEMPLAZAR USUARIO_DB POR EL USUARIO DE LA BASE DE DATOS UTILIZADA  -->
+            <property name="jakarta.persistence.jdbc.user" value="USUARIO_DB"/>
+            <!--    REEMPLAZAR CONTRASEÑA_DB POR LA CONTRASEÑA DE LA BASE DE DATOS UTILIZADA  -->
+            <property name="jakarta.persistence.jdbc.password" value="CONTRASEÑA_DB"/>
+            <property name="hibernate.dialect" value="org.hibernate.dialect.MySQLDialect"/>
+            <property name="hibernate.hbm2ddl.auto" value="update"/>
+            <property name="hibernate.connection.autocommit" value="false"/>
+            <!--    TRUE PARA DESARROLLO  -->
+            <property name="hibernate.show_sql" value="false"/>
+            <!--    TRUE PARA DESARROLLO  -->
+            <property name="hibernate.format_sql" value="true"/>
+        </properties>
+    </persistence-unit>
+</persistence>
